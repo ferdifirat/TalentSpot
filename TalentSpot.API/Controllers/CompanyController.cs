@@ -1,6 +1,7 @@
 using TalentSpot.Application.DTOs;
 using TalentSpot.Application.Services;
 using Microsoft.AspNetCore.Mvc;
+using TalentSpot.Application.Services.Concrete;
 
 namespace TalentSpot.API.Controllers
 {
@@ -18,43 +19,22 @@ namespace TalentSpot.API.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterCompany([FromBody] CompanyDTO companyDTO)
         {
-            try
-            {
-                var result = await _companyService.RegisterCompanyAsync(companyDTO);
-                return CreatedAtAction(nameof(GetCompany), new { id = result.Id }, result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _companyService.RegisterCompanyAsync(companyDTO);
+            return Ok(result);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCompany(Guid id)
         {
-            try
-            {
-                var company = await _companyService.GetCompanyAsync(id);
-                return Ok(company);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
+            var company = await _companyService.GetCompanyAsync(id);
+            return Ok(company);
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateCompany([FromBody] CompanyDTO companyDTO)
         {
-            try
-            {
-                var updated = await _companyService.UpdateCompanyAsync(companyDTO);
-                return updated ? NoContent() : NotFound();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var updated = await _companyService.UpdateCompanyAsync(companyDTO);
+            return Ok(updated);
         }
     }
 }

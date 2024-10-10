@@ -5,8 +5,8 @@ namespace TalentSpot.Application.Services
 {
     public interface ICompanyService
     {
-        Task<CompanyDTO> RegisterCompanyAsync(CompanyDTO companyDTO);
-        Task<CompanyDTO> GetCompanyAsync(Guid id);
-        Task<bool> UpdateCompanyAsync(CompanyDTO companyDTO);
+        Task<ResponseMessage<CompanyDTO>> RegisterCompanyAsync(CompanyDTO companyDTO);
+        Task<ResponseMessage<CompanyDTO>> GetCompanyAsync(Guid id);
+        Task<ResponseMessage<CompanyDTO>> UpdateCompanyAsync(CompanyDTO companyDTO);
     }
 }

@@ -5,11 +5,11 @@ namespace TalentSpot.Application.Services
 {
     public interface IJobService
     {
-        Task<JobDTO> CreateJobAsync(JobDTO jobDTO);
-        Task<JobDTO> GetJobAsync(Guid id);
+        Task<ResponseMessage<JobDTO>> CreateJobAsync(JobDTO jobDTO);
+        Task<ResponseMessage<JobDTO>> GetJobAsync(Guid id);
         Task<bool> UpdateJobAsync(JobDTO jobDTO);
         Task<bool> DeleteJobAsync(Guid id);
-        Task<List<JobDTO>> GetAllJobAsync();
-        Task<IEnumerable<JobDTO>> SearchJobsByExpirationDateAsync(DateTime expirationDate);
+        Task<ResponseMessage<List<JobDTO>>> GetAllJobAsync();
+        Task<ResponseMessage<List<JobDTO>>> SearchJobsByExpirationDateAsync(DateTime expirationDate);
     }
 }

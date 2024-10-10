@@ -6,6 +6,6 @@
         public string PhoneNumber { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
-        public int AllowedJobPostings { get; set; }
+        public int AllowedJobPostings { get; set; } = 2;
     }
 }

@@ -5,12 +5,12 @@ using TalentSpot.Application.Services;
 using TalentSpot.Domain.Interfaces;
 using TalentSpot.Infrastructure.Data;
 using TalentSpot.Infrastructure.Repositories;
+using TalentSpot.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 
 // Redis Configuration
 var redisConfiguration = builder.Configuration.GetSection("Redis:Configuration").Value;
@@ -27,7 +27,7 @@ var password = elasticsearchOptions["Password"];
 
 // Elasticsearch client configuration
 var settings = new ConnectionSettings(new Uri(uri))
-    .DefaultIndex("your_default_index") // Varsayýlan indeks adýný buraya ekleyin
+    .DefaultIndex("your_default_index")
     .BasicAuthentication(username, password);
 
 var client = new ElasticClient(settings);
@@ -39,6 +39,7 @@ builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IForbiddenWordsService, ForbiddenWordsService>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Add services to the container.
 
@@ -48,6 +49,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

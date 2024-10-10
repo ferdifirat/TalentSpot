@@ -17,13 +17,6 @@
 
 	
 	<ItemGroup>
-    <Folder Include="Configurations\" />
-    <Folder Include="Interfaces\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
-
-	
-	<ItemGroup>
 	  <ProjectReference Include="..\TalentSpot.Domain\TalentSpot.Domain.csproj" />
 	</ItemGroup>
 

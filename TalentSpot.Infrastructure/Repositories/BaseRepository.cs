@@ -49,20 +49,5 @@ namespace TalentSpot.Infrastructure.Repositories
         {
             return await _dbSet.Where(predicate).ToListAsync();
         }
-
-        public async Task<bool> SaveChangesAsync()
-        {
-            try
-            {
-                // Save changes to the database
-                var result = await _context.SaveChangesAsync();
-                return result > 0; // Return true if any changes were saved
-            }
-            catch (Exception)
-            {
-                // Handle exceptions (e.g., log the error)
-                return false; // Return false if saving failed
-            }
-        }
     }
 }

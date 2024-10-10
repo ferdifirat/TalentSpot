@@ -9,68 +9,77 @@ namespace TalentSpot.Application.Services.Concrete
         private readonly IJobRepository _jobRepository;
         private readonly ICompanyRepository _companyRepository;
         private readonly IForbiddenWordsService _forbiddenWordsService;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public JobService(IJobRepository jobRepository, ICompanyRepository companyRepository, IForbiddenWordsService forbiddenWordsService)
+        public JobService(IJobRepository jobRepository,
+            ICompanyRepository companyRepository,
+            IForbiddenWordsService forbiddenWordsService,
+            IUnitOfWork unitOfWork)
         {
             _jobRepository = jobRepository;
             _companyRepository = companyRepository;
             _forbiddenWordsService = forbiddenWordsService;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<JobDTO> CreateJobAsync(JobDTO jobDTO)
+        public async Task<ResponseMessage<JobDTO>> CreateJobAsync(JobDTO jobDTO)
         {
-            // Validate that the company exists
             var company = await _companyRepository.GetByIdAsync(jobDTO.CompanyId);
             if (company == null)
             {
-                throw new Exception("Şirket bulunamadı.");
+                ResponseMessage<JobDTO>.FailureResponse("Şirket bulunamadı.");
             }
 
-            // Check if the company has job postings left
-            if (company.AllowedJobPostings <= 0)
+            if (company?.AllowedJobPostings == 0)
             {
-                throw new Exception("Bu şirketin ilan yayınlama hakkı kalmamıştır.");
+                ResponseMessage<JobDTO>.FailureResponse("Bu şirketin ilan yayınlama hakkı kalmamıştır.");
             }
 
-            // Create the Job entity
             var job = new Job
             {
-                Id = Guid.NewGuid(), // Use GUID for the job ID
+                Id = Guid.NewGuid(),
                 Position = jobDTO.Position,
                 Description = jobDTO.Description,
-                ExpirationDate = DateTime.UtcNow.AddDays(15), // Set expiration date to 15 days from now
-                QualityScore = await CalculateQualityScoreAsync(jobDTO), // Calculate quality score
+                ExpirationDate = DateTime.UtcNow.AddDays(15),
+                QualityScore = await CalculateQualityScoreAsync(jobDTO),
                 Benefits = jobDTO.Benefits,
                 WorkType = jobDTO.WorkType,
                 Salary = jobDTO.Salary,
                 CompanyId = jobDTO.CompanyId
             };
 
-            // Save the job entity
-            await _jobRepository.AddAsync(job);
-            await _jobRepository.SaveChangesAsync();
-
-            // Decrease the company's allowed job postings
-            company.AllowedJobPostings--;
-            await _companyRepository.UpdateAsync(company);
-            await _companyRepository.SaveChangesAsync();
-
-            // Return the created JobDTO
-            return new JobDTO
+            try
             {
-                Id = job.Id,
-                Position = job.Position,
-                Description = job.Description,
-                ExpirationDate = job.ExpirationDate,
-                QualityScore = job.QualityScore,
-                Benefits = job.Benefits,
-                WorkType = job.WorkType,
-                Salary = job.Salary,
-                CompanyId = job.CompanyId
-            };
+                await _unitOfWork.BeginTransactionAsync();
+                await _jobRepository.AddAsync(job);
+                await _unitOfWork.CompleteAsync();
+
+                company.AllowedJobPostings--;
+                await _companyRepository.UpdateAsync(company);
+                await _unitOfWork.CompleteAsync();
+
+                await _unitOfWork.CommitAsync();
+                return ResponseMessage<JobDTO>.SuccessResponse(new JobDTO
+                {
+                    Id = job.Id,
+                    Position = job.Position,
+                    Description = job.Description,
+                    ExpirationDate = job.ExpirationDate,
+                    QualityScore = job.QualityScore,
+                    Benefits = job.Benefits,
+                    WorkType = job.WorkType,
+                    Salary = job.Salary,
+                    CompanyId = job.CompanyId
+                });
+            }
+            catch (Exception ex)
+            {
+                await _unitOfWork.RollbackAsync();
+                return ResponseMessage<JobDTO>.FailureResponse("Bir hata oluştu: " + ex.Message);
+            }
         }
 
-        public async Task<JobDTO> GetJobAsync(Guid id)
+        public async Task<ResponseMessage<JobDTO>> GetJobAsync(Guid id)
         {
             var job = await _jobRepository.GetByIdAsync(id);
             if (job == null)
@@ -78,7 +87,7 @@ namespace TalentSpot.Application.Services.Concrete
                 throw new Exception("İlan bulunamadı.");
             }
 
-            return new JobDTO
+            return ResponseMessage<JobDTO>.SuccessResponse(new JobDTO
             {
                 Id = job.Id,
                 Position = job.Position,
@@ -89,15 +98,15 @@ namespace TalentSpot.Application.Services.Concrete
                 WorkType = job.WorkType,
                 Salary = job.Salary,
                 CompanyId = job.CompanyId
-            };
+            });
         }
 
-        public async Task<List<JobDTO>> GetAllJobAsync()
+        public async Task<ResponseMessage<List<JobDTO>>> GetAllJobAsync()
         {
             var jobs = await _jobRepository.GetAllAsync();
             if (jobs == null)
             {
-                throw new Exception("İlan bulunamadı.");
+                ResponseMessage<List<JobDTO>>.FailureResponse("İlan bulunamadı.");
             }
 
             var jobDTOs = jobs.Select(p => new JobDTO
@@ -113,7 +122,7 @@ namespace TalentSpot.Application.Services.Concrete
                 CompanyId = p.CompanyId
             }).ToList();
 
-            return jobDTOs;
+            return ResponseMessage<List<JobDTO>>.SuccessResponse(jobDTOs);
         }
 
         public async Task<bool> UpdateJobAsync(JobDTO jobDTO)
@@ -133,7 +142,7 @@ namespace TalentSpot.Application.Services.Concrete
             existingJob.Salary = jobDTO.Salary;
 
             await _jobRepository.UpdateAsync(existingJob);
-            return await _jobRepository.SaveChangesAsync();
+            return await _unitOfWork.CompleteAsync();
         }
 
         public async Task<bool> DeleteJobAsync(Guid id)
@@ -141,19 +150,17 @@ namespace TalentSpot.Application.Services.Concrete
             var job = await _jobRepository.GetByIdAsync(id);
             if (job == null)
             {
-                throw new Exception("İlan bulunamadı.");
+                ResponseMessage<List<JobDTO>>.FailureResponse("İlan bulunamadı.");
             }
 
             await _jobRepository.DeleteAsync(id);
-            return await _jobRepository.SaveChangesAsync();
+            return await _unitOfWork.CompleteAsync();
         }
 
-        public async Task<IEnumerable<JobDTO>> SearchJobsByExpirationDateAsync(DateTime expirationDate)
+        public async Task<ResponseMessage<List<JobDTO>>> SearchJobsByExpirationDateAsync(DateTime expirationDate)
         {
-            // Get jobs with the specified expiration date
             var jobs = await _jobRepository.FindAsync(j => j.ExpirationDate.Date == expirationDate.Date);
 
-            // Map the jobs to JobDTO
             var jobDTOs = new List<JobDTO>();
             foreach (var job in jobs)
             {
@@ -171,7 +178,7 @@ namespace TalentSpot.Application.Services.Concrete
                 });
             }
 
-            return jobDTOs;
+            return ResponseMessage<List<JobDTO>>.SuccessResponse(jobDTOs);
         }
 
         private async Task<bool> ContainsForbiddenWordsAsync(string description)
@@ -184,7 +191,6 @@ namespace TalentSpot.Application.Services.Concrete
         {
             int score = 0;
 
-            // Calculate quality score based on the rules provided
             if (!string.IsNullOrEmpty(jobDTO.WorkType))
             {
                 score++;
@@ -200,13 +206,12 @@ namespace TalentSpot.Application.Services.Concrete
                 score++;
             }
 
-            // Check for forbidden words
             if (!await ContainsForbiddenWordsAsync(jobDTO.Description))
             {
-                score += 2; // 2 points for no forbidden words
+                score += 2;
             }
 
-            return score; // Returns the total score out of 5
+            return score;
         }
     }
 }
