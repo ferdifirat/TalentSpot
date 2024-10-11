@@ -14,6 +14,6 @@ namespace TalentSpot.Application.Services
 
         Task<bool> DeleteJobAsync(Guid id);
 
-        Task<ResponseMessage<List<JobDTO>>> SearchJobsByExpirationDateAsync(DateTime expirationDate);
+        Task<ResponseMessage<List<JobDTO>>> SearchJobsByExpirationDateRangeAsync(DateTime startDate, DateTime endDate);
     }
 }

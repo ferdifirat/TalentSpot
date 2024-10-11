@@ -85,16 +85,24 @@ namespace TalentSpot.API.Controllers
         }
 
         [HttpGet("search")]
-        public async Task<ActionResult<IEnumerable<JobDTO>>> SearchJobs([FromQuery] DateTime expirationDate)
+        public async Task<ActionResult<ResponseMessage<List<JobDTO>>>> SearchJobs([FromQuery] string startDate, [FromQuery] string endDate)
         {
-            var jobs = await _jobService.SearchJobsByExpirationDateAsync(expirationDate);
 
-            if (!jobs.Success)
+            if (!DateTime.TryParse(startDate, out var parsedStartDate) || !DateTime.TryParse(endDate, out var parsedEndDate))
             {
-                return NotFound(jobs);
+                return BadRequest("Geçersiz tarih formatý.");
             }
 
-            return Ok(jobs);
+            var jobsResponse = await _jobService.SearchJobsByExpirationDateRangeAsync(parsedStartDate.ToUniversalTime(), parsedEndDate.ToUniversalTime());
+
+            // Eðer baþarýlý deðilse 404 NotFound dönüyoruz.
+            if (!jobsResponse.Success)
+            {
+                return NotFound(jobsResponse);
+            }
+
+            // Baþarýlý ise 200 OK dönüyoruz.
+            return Ok(jobsResponse);
         }
     }
 }

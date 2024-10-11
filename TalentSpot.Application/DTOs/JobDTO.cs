@@ -11,9 +11,8 @@ namespace TalentSpot.Application.DTOs
         public int QualityScore { get; set; }
         public List<BenefitDTO> Benefits { get; set; }
         public WorkTypeDTO WorkType{ get; set; }
-        public Guid WorkTypeId{ get; set; }
         public decimal? Salary { get; set; }
         public Guid CompanyId { get; set; }
-        public Company Company { get; set; }
+        public CompanyDTO Company { get; set; }
     }
 }

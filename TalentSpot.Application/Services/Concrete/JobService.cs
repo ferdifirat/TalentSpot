@@ -54,7 +54,7 @@ namespace TalentSpot.Application.Services.Concrete
             }
 
             var benefits = new List<Benefit>();
-            if (jobDTO.BenefitIds.Count() > 0)
+            if (jobDTO.BenefitIds != null)
             {
                 benefits = (await _benefitRepository.FindAsync(p => jobDTO.BenefitIds.Contains(p.Id))).ToList();
                 if (benefits == null || !benefits.Any())
@@ -78,7 +78,7 @@ namespace TalentSpot.Application.Services.Concrete
                 {
                     JobId = jobId,
                     BenefitId = b.Id
-                }).ToList() : null
+                }).ToList() : new List<JobBenefit>()
             };
 
             try
@@ -100,16 +100,16 @@ namespace TalentSpot.Application.Services.Concrete
                     Description = job.Description,
                     ExpirationDate = job.ExpirationDate,
                     QualityScore = job.QualityScore,
-                    Benefits = benefits.Select(p => new BenefitDTO()
+                    Benefits = benefits != null && benefits.Any() ? benefits.Select(p => new BenefitDTO()
                     {
                         Id = p.Id,
                         Name = p.Name
-                    }).ToList(),
-                    WorkType = new WorkTypeDTO()
+                    }).ToList() : new List<BenefitDTO>(),
+                    WorkType = job.WorkType != null ? new WorkTypeDTO()
                     {
                         Id = job.WorkType.Id,
                         Name = job.WorkType.Name,
-                    },
+                    } : new WorkTypeDTO(),
                     Salary = job.Salary,
                     CompanyId = job.CompanyId
                 });
@@ -204,11 +204,13 @@ namespace TalentSpot.Application.Services.Concrete
                 return ResponseMessage<JobDTO>.FailureResponse("İlan bulunamadı.");
             }
 
-            // WorkType checks
-            var workType = await _workTypeRepository.GetByIdAsync(jobUpdateDTO.WorkTypeId);
-            if (workType == null)
+            if (jobUpdateDTO.WorkTypeId != null)
             {
-                return ResponseMessage<JobDTO>.FailureResponse("Geçersiz çalışma türü.");
+                var workType = await _workTypeRepository.GetByIdAsync((Guid)jobUpdateDTO.WorkTypeId);
+                if (workType == null)
+                {
+                    return ResponseMessage<JobDTO>.FailureResponse("Geçersiz çalışma türü.");
+                }
             }
 
             // Benefits checks
@@ -246,47 +248,62 @@ namespace TalentSpot.Application.Services.Concrete
             var job = await _jobRepository.GetByIdAsync(id);
             if (job == null)
             {
-                //return ResponseMessage<List<JobDTO>>.FailureResponse("İlan bulunamadı.");
+                return false;
             }
 
             await _jobRepository.DeleteAsync(id);
             return await _unitOfWork.CompleteAsync();
         }
 
-        public async Task<ResponseMessage<List<JobDTO>>> SearchJobsByExpirationDateAsync(DateTime expirationDate)
+        public async Task<ResponseMessage<List<JobDTO>>> SearchJobsByExpirationDateRangeAsync(DateTime startDate, DateTime endDate)
         {
-            var jobs = await _jobRepository.FindAsync(j => j.ExpirationDate.Date == expirationDate.Date);
-
-            var jobDTOs = new List<JobDTO>();
-            foreach (var job in jobs)
+            var includes = new List<string>
             {
-                var includes = new List<string> { $"{nameof(JobBenefit.Benefit)}" };
-                var benefits = (await _jobBenefitRepository.List<JobBenefit>(p => p.JobId == job.Id, true, includes)).ToList();
-                var workType = job.WorkTypeId.HasValue ? await _workTypeRepository.GetByIdAsync(job.WorkTypeId.Value) : null;
+                $"{nameof(Job.Company)}",
+                $"{nameof(Job.JobBenefits)}",
+                $"{nameof(Job.JobBenefits)}.{nameof(JobBenefit.Benefit)}",
+                $"{nameof(Job.WorkType)}"
+            };
 
-                jobDTOs.Add(new JobDTO
-                {
-                    Id = job.Id,
-                    Position = job.Position,
-                    Description = job.Description,
-                    ExpirationDate = job.ExpirationDate,
-                    QualityScore = job.QualityScore,
-                    Benefits = benefits != null && benefits.Any() ? benefits.Select(p => new BenefitDTO()
+            var jobs = (await _jobRepository.List<Job>(j => j.ExpirationDate.Date >= startDate.Date && j.ExpirationDate.Date <= endDate.Date, true, includes)).ToList();
+
+            var jobDTOs = jobs.Select(job => new JobDTO
+            {
+                Id = job.Id,
+                Position = job.Position,
+                Description = job.Description,
+                ExpirationDate = job.ExpirationDate,
+                QualityScore = job.QualityScore,
+                Benefits = job.JobBenefits != null
+                    ? job.JobBenefits.Select(p => new BenefitDTO()
                     {
-                        Name = p.Benefit.Name,
+                        Name = p.Benefit.Name ?? string.Empty,
                         Id = p.Benefit.Id
-                    }).ToList() : new List<BenefitDTO>(),
-                    WorkType = new WorkTypeDTO()
+                    }).ToList()
+                    : new List<BenefitDTO>(),
+                WorkType = job.WorkType != null
+                    ? new WorkTypeDTO
                     {
-                        Name = workType?.Name ?? "",
-                        Id = workType?.Id
-                    },
-                    Salary = job.Salary,
-                    CompanyId = job.CompanyId
-                });
+                        Name = job.WorkType.Name ?? string.Empty,
+                        Id = job.WorkType.Id
+                    }
+                    : new WorkTypeDTO(),
+                Salary = job.Salary,
+                CompanyId = job.CompanyId,
+                Company = new CompanyDTO()
+                {
+                    Id = job.Company.Id,
+                    Address = job.Company.Address,
+                    Name = job.Company.Name,
+                }
+            }).ToList();
+
+            if (jobDTOs.Any())
+            {
+                return ResponseMessage<List<JobDTO>>.SuccessResponse(jobDTOs);
             }
 
-            return ResponseMessage<List<JobDTO>>.SuccessResponse(jobDTOs);
+            return ResponseMessage<List<JobDTO>>.FailureResponse("Belirtilen tarih aralığında aktif iş ilanı bulunamadı.");
         }
 
         private async Task<bool> ContainsForbiddenWordsAsync(string description)
@@ -295,7 +312,7 @@ namespace TalentSpot.Application.Services.Concrete
             return forbiddenWords.Select(p => p.Word).Any(word => description.Contains(word, StringComparison.OrdinalIgnoreCase));
         }
 
-        private async Task<int> CalculateQualityScoreAsync(Guid? workTypeId, int? salary, List<Guid> benefitIds, string description)
+        private async Task<int> CalculateQualityScoreAsync(Guid? workTypeId, int? salary, List<Guid>? benefitIds, string description)
         {
             int score = 0;
 
@@ -309,7 +326,7 @@ namespace TalentSpot.Application.Services.Concrete
                 score++;
             }
 
-            if (benefitIds.Count() > 0)
+            if (benefitIds != null)
             {
                 score++;
             }
