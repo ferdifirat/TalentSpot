@@ -1,13 +1,12 @@
-using TalentSpot.Application.DTOs;
 using TalentSpot.Application.Services;
 using Microsoft.AspNetCore.Mvc;
-using TalentSpot.Application.Services.Concrete;
 using TalentSpot.Domain.Entities;
-using Nest;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TalentSpot.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class BenefitController : ControllerBase
     {

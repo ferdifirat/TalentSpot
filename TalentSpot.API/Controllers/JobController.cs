@@ -1,10 +1,12 @@
 using TalentSpot.Application.DTOs;
 using TalentSpot.Application.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TalentSpot.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class JobController : ControllerBase
     {
@@ -16,7 +18,7 @@ namespace TalentSpot.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<JobDTO>>> GetJobs()
+        public async Task<ActionResult<IEnumerable<JobDTO>>> GetAllJobs()
         {
             var jobs = await _jobService.GetAllJobAsync();
 

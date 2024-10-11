@@ -100,8 +100,16 @@ namespace TalentSpot.Application.Services.Concrete
                     Description = job.Description,
                     ExpirationDate = job.ExpirationDate,
                     QualityScore = job.QualityScore,
-                    //Benefits = string.Join(", ", benefits.Select(b => b.Name)), // Yan haklar string'e dönüştürüldü
-                    //WorkType = workType.Name, // WorkType adı alındı
+                    Benefits = benefits.Select(p=> new BenefitDTO()
+                    {
+                        Id =p.Id,
+                        Name = p.Name
+                    }).ToList(),
+                    WorkType = new WorkTypeDTO()
+                    {
+                        Id = job.WorkType.Id,
+                        Name = job.WorkType.Name,
+                    },
                     Salary = job.Salary,
                     CompanyId = job.CompanyId
                 });
@@ -131,8 +139,12 @@ namespace TalentSpot.Application.Services.Concrete
                 Description = job.Description,
                 ExpirationDate = job.ExpirationDate,
                 QualityScore = job.QualityScore,
-                Benefits = benefits.Select(p=>p.Benefit).ToList(),
-                WorkType = new WorkType() 
+                Benefits = benefits.Select(p => new BenefitDTO()
+                {
+                    Id = p.Benefit.Id,
+                    Name = p.Benefit.Name
+                }).ToList(),
+                WorkType = new WorkTypeDTO() 
                 {
                      Name = workType.Name,
                      Id = job.Id,
@@ -164,8 +176,12 @@ namespace TalentSpot.Application.Services.Concrete
                     Description = job.Description,
                     ExpirationDate = job.ExpirationDate,
                     QualityScore = job.QualityScore,
-                    Benefits = benefits.Select(p => p.Benefit).ToList(),
-                    WorkType = new WorkType()
+                    Benefits = benefits.Select(p => new BenefitDTO()
+                    {
+                        Id = p.Benefit.Id,
+                        Name = p.Benefit.Name
+                    }).ToList(),
+                    WorkType = new WorkTypeDTO()
                     {
                         Id = workType.Id,
                         Name = workType.Name
@@ -263,7 +279,7 @@ namespace TalentSpot.Application.Services.Concrete
         private async Task<bool> ContainsForbiddenWordsAsync(string description)
         {
             var forbiddenWords = await _forbiddenWordsService.GetAllForbiddenWordsAsync();
-            return forbiddenWords.Select(p=>p.Word).Any(word => description.Contains(word, StringComparison.OrdinalIgnoreCase));
+            return forbiddenWords.Select(p=>p.).Any(word => description.Contains(word, StringComparison.OrdinalIgnoreCase));
         }
 
         private async Task<int> CalculateQualityScoreAsync(JobCreateDTO jobDTO)

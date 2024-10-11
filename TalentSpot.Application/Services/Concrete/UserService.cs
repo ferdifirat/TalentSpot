@@ -67,16 +67,19 @@ namespace TalentSpot.Application.Services.Concrete
 
                 return ResponseMessage<UserDTO>.SuccessResponse(new UserDTO()
                 {
-                    CompanyName  = newCompany.Name,
-                    Address = newCompany.Address,
                     Email = newUser.Email,
                     Id = newUser.Id,
                     PhoneNumber = newUser.PhoneNumber,
+                    Company = new CompanyDTO()
+                    {
+                        Name = newCompany.Name,
+                        Address = newCompany.Address,
+                        Id = newCompany.Id,
+                    }
                 });
             }
             catch (Exception ex)
             {
-                // Hata durumunda transaction'ı geri al
                 await _unitOfWork.RollbackAsync();
                 return ResponseMessage<UserDTO>.FailureResponse("");
             }

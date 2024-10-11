@@ -1,5 +1,4 @@
 ﻿using TalentSpot.Application.DTOs;
-using TalentSpot.Domain.Entities;
 using TalentSpot.Domain.Interfaces;
 
 namespace TalentSpot.Application.Services.Concrete
@@ -15,6 +14,35 @@ namespace TalentSpot.Application.Services.Concrete
             _unitOfWork = unitOfWork;
         }
 
+        public async Task<ResponseMessage<List<CompanyDTO>>> GetAllCompanyAsync()
+        {
+            var companies = await _companyRepository.GetAllAsync();
+            if (companies == null || !companies.Any())
+            {
+                return ResponseMessage<List<CompanyDTO>>.FailureResponse("İlan bulunamadı.");
+            }
+
+            var companyDTOs = new List<CompanyDTO>();
+
+            foreach (var company in companies)
+            {
+                companyDTOs.Add(new CompanyDTO
+                {
+                    Id = company.Id,
+                    Name = company.Name,
+                    Address = company.Address,
+                    AllowedJobPostings = company.AllowedJobPostings,
+                    User = new UserDTO()
+                    {
+                        Id = company.User.Id,
+                        PhoneNumber = company.User.PhoneNumber
+                    }
+                });
+            }
+
+            return ResponseMessage<List<CompanyDTO>>.SuccessResponse(companyDTOs);
+        }
+
         public async Task<ResponseMessage<CompanyDTO>> GetCompanyAsync(Guid id)
         {
             var company = await _companyRepository.GetByIdAsync(id);
@@ -26,10 +54,14 @@ namespace TalentSpot.Application.Services.Concrete
             return ResponseMessage<CompanyDTO>.SuccessResponse(new CompanyDTO
             {
                 Id = company.Id,
-                PhoneNumber = company.User.PhoneNumber,
                 Name = company.Name,
                 Address = company.Address,
-                AllowedJobPostings = company.AllowedJobPostings
+                AllowedJobPostings = company.AllowedJobPostings,
+                User = new UserDTO()
+                {
+                    PhoneNumber = company.User.PhoneNumber,
+                }
+
             });
         }
 
@@ -56,10 +88,13 @@ namespace TalentSpot.Application.Services.Concrete
             return ResponseMessage<CompanyDTO>.SuccessResponse(new CompanyDTO()
             {
                 Id = existingCompany.Id,
-                PhoneNumber = existingCompany.User.PhoneNumber,
                 Name = existingCompany.Name,
                 Address = existingCompany.Address,
-                AllowedJobPostings = existingCompany.AllowedJobPostings
+                AllowedJobPostings = existingCompany.AllowedJobPostings,
+                User = new UserDTO()
+                {
+                    PhoneNumber = existingCompany.User.PhoneNumber,
+                }
             });
         }
     }

@@ -2,11 +2,13 @@ using TalentSpot.Application.DTOs;
 using TalentSpot.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using TalentSpot.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TalentSpot.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class WorkTypeController : ControllerBase
     {
         private readonly IWorkTypeService _workTypeService;

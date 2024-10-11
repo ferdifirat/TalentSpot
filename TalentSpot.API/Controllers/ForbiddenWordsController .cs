@@ -1,5 +1,5 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Distributed;
 using TalentSpot.Application.Services;
 using TalentSpot.Domain.Entities;
 
@@ -7,6 +7,7 @@ namespace TalentSpot.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ForbiddenWordController : ControllerBase
     {
         private readonly IForbiddenWordService _forbiddenWordService;

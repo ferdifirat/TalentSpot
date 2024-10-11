@@ -1,14 +1,7 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+﻿using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.IdentityModel.Tokens;
-using TalentSpot.Application.DTOs;
 using TalentSpot.Domain.Entities;
 using TalentSpot.Domain.Interfaces;
-using TalentSpot.Infrastructure.Helper;
-using TalentSpot.Infrastructure.Repositories;
 
 namespace TalentSpot.Application.Services.Concrete
 {
@@ -71,7 +64,7 @@ namespace TalentSpot.Application.Services.Concrete
         {
             await _benefitRepository.UpdateAsync(benefit);
             await _unitOfWork.CompleteAsync();
-            await _cache.RemoveAsync("benefits"); 
+            await _cache.RemoveAsync("benefits");
             await _cache.RemoveAsync($"benefit-{benefit.Id}");
         }
 
