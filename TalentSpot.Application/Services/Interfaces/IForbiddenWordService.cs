@@ -1,4 +1,5 @@
-﻿using TalentSpot.Domain.Entities;
+﻿using TalentSpot.Application.DTOs;
+using TalentSpot.Domain.Entities;
 
 namespace TalentSpot.Application.Services
 {
@@ -6,8 +7,8 @@ namespace TalentSpot.Application.Services
     {
         Task<IEnumerable<ForbiddenWord>> GetAllForbiddenWordsAsync();
         Task<ForbiddenWord> GetForbiddenWordByIdAsync(Guid id);
-        Task AddForbiddenWordAsync(ForbiddenWord forbiddenWord);
-        Task UpdateForbiddenWordAsync(ForbiddenWord forbiddenWord);
+        Task<ResponseMessage<ForbiddenWord>> AddForbiddenWordAsync(ForbiddenWord forbiddenWord);
+        Task<ResponseMessage<ForbiddenWord>> UpdateForbiddenWordAsync(ForbiddenWord forbiddenWord);
         Task DeleteForbiddenWordAsync(Guid id);
     }
 }

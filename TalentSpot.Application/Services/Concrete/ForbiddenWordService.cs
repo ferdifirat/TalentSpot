@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
+using TalentSpot.Application.DTOs;
 using TalentSpot.Domain.Entities;
 using TalentSpot.Domain.Interfaces;
 
@@ -53,19 +54,36 @@ namespace TalentSpot.Application.Services.Concrete
             return forbiddenWord;
         }
 
-        public async Task AddForbiddenWordAsync(ForbiddenWord forbiddenWord)
+        public async Task<ResponseMessage<ForbiddenWord>> AddForbiddenWordAsync(ForbiddenWord forbiddenWord)
         {
+            var existingWord = await _forbiddenWordRepository.FindAsync(fw => fw.Word.ToLower() == forbiddenWord.Word.ToLower());
+
+            if (existingWord != null)
+            {
+                return ResponseMessage<ForbiddenWord>.FailureResponse("Yasaklı kelime zaten mevcut.");
+            }
+
             await _forbiddenWordRepository.AddAsync(forbiddenWord);
             await _unitOfWork.CompleteAsync();
             await _cache.RemoveAsync("forbiddenwords");
+            return ResponseMessage<ForbiddenWord>.SuccessResponse(forbiddenWord);
         }
 
-        public async Task UpdateForbiddenWordAsync(ForbiddenWord forbiddenWord)
+        public async Task<ResponseMessage<ForbiddenWord>> UpdateForbiddenWordAsync(ForbiddenWord forbiddenWord)
         {
+            var existingWord = await _forbiddenWordRepository
+                .FindAsync(fw => fw.Word.ToLower() == forbiddenWord.Word.ToLower() && fw.Id != forbiddenWord.Id);
+
+            if (existingWord != null)
+            {
+                return ResponseMessage<ForbiddenWord>.FailureResponse("Aynı kelime zaten başka bir kayıt olarak mevcut.");
+            }
+
             await _forbiddenWordRepository.UpdateAsync(forbiddenWord);
             await _unitOfWork.CompleteAsync();
             await _cache.RemoveAsync("forbiddenwords");
             await _cache.RemoveAsync($"forbiddenword-{forbiddenWord.Id}");
+            return ResponseMessage<ForbiddenWord>.SuccessResponse(forbiddenWord);
         }
 
         public async Task DeleteForbiddenWordAsync(Guid id)

@@ -120,10 +120,9 @@ namespace TalentSpot.Application.Services.Concrete
 
             var claims = new[]
             {
-        new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
-        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
-    };
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+            };
 
             var token = new JwtSecurityToken(
                 issuer: "yourapp",

@@ -9,6 +9,6 @@ namespace TalentSpot.Application.DTOs
         public string Description { get; set; }
         public List<Guid> BenefitIds { get; set; }
         public Guid WorkTypeId { get; set; }
-        public decimal? Salary { get; set; }
+        public int? Salary { get; set; }
     }
 }

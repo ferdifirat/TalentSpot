@@ -31,9 +31,9 @@ namespace TalentSpot.Application.Services.Concrete
             _jobBenefitRepository = jobBenefitRepository;
         }
 
-        public async Task<ResponseMessage<JobDTO>> CreateJobAsync(JobCreateDTO jobDTO)
+        public async Task<ResponseMessage<JobDTO>> CreateJobAsync(JobCreateDTO jobDTO, Guid userId)
         {
-            var company = await _companyRepository.GetByIdAsync(jobDTO.CompanyId);
+            var company = await _companyRepository.GetCompanyByUserId(userId);
             if (company == null)
             {
                 return ResponseMessage<JobDTO>.FailureResponse("Şirket bulunamadı.");
@@ -56,12 +56,12 @@ namespace TalentSpot.Application.Services.Concrete
             var benefits = new List<Benefit>();
             if (jobDTO.BenefitIds.Count() > 0)
             {
-                benefits = (await _benefitRepository.FindAsync(p=> jobDTO.BenefitIds.Contains(p.Id))).ToList();
+                benefits = (await _benefitRepository.FindAsync(p => jobDTO.BenefitIds.Contains(p.Id))).ToList();
                 if (benefits == null || !benefits.Any())
                 {
                     return ResponseMessage<JobDTO>.FailureResponse("Geçersiz yan haklar.");
                 }
-            }
+            };
 
             var jobId = Guid.NewGuid();
             var job = new Job
@@ -70,10 +70,10 @@ namespace TalentSpot.Application.Services.Concrete
                 Position = jobDTO.Position,
                 Description = jobDTO.Description,
                 ExpirationDate = DateTime.UtcNow.AddDays(15),
-                QualityScore = await CalculateQualityScoreAsync(jobDTO),
+                QualityScore = await CalculateQualityScoreAsync(jobDTO.WorkTypeId, jobDTO.Salary, jobDTO.BenefitIds, jobDTO.Description),
                 WorkTypeId = jobDTO.WorkTypeId, // WorkType ilişkilendirildi
                 Salary = jobDTO.Salary,
-                CompanyId = jobDTO.CompanyId,
+                CompanyId = company.Id,
                 JobBenefits = benefits.Count() > 0 ? benefits.Select(b => new JobBenefit
                 {
                     JobId = jobId,
@@ -100,9 +100,9 @@ namespace TalentSpot.Application.Services.Concrete
                     Description = job.Description,
                     ExpirationDate = job.ExpirationDate,
                     QualityScore = job.QualityScore,
-                    Benefits = benefits.Select(p=> new BenefitDTO()
+                    Benefits = benefits.Select(p => new BenefitDTO()
                     {
-                        Id =p.Id,
+                        Id = p.Id,
                         Name = p.Name
                     }).ToList(),
                     WorkType = new WorkTypeDTO()
@@ -123,14 +123,14 @@ namespace TalentSpot.Application.Services.Concrete
 
         public async Task<ResponseMessage<JobDTO>> GetJobAsync(Guid id)
         {
-            var job = await _jobRepository.GetByIdAsync(id);
+            var job = await _jobRepository.GetById<Job>(id, true);
             if (job == null)
             {
                 return ResponseMessage<JobDTO>.FailureResponse("İlan bulunamadı.");
             }
 
-            var benefits = await _jobBenefitRepository.GetBenefitsByJobIdAsync(job.Id);
-            var workType = await _workTypeRepository.GetByIdAsync((Guid)job.WorkTypeId);
+            var includes = new List<string> { $"{nameof(JobBenefit.Benefit)}" };
+            var benefits = (await _jobBenefitRepository.List<JobBenefit>(p => p.JobId == job.Id, true, includes)).ToList();
 
             return ResponseMessage<JobDTO>.SuccessResponse(new JobDTO
             {
@@ -144,11 +144,12 @@ namespace TalentSpot.Application.Services.Concrete
                     Id = p.Benefit.Id,
                     Name = p.Benefit.Name
                 }).ToList(),
-                WorkType = new WorkTypeDTO() 
+                WorkType = job.WorkType != null ? new WorkTypeDTO()
                 {
-                     Name = workType.Name,
-                     Id = job.Id,
-                },
+                    Name = job.WorkType.Name,
+                    Id = job.WorkType?.Id,
+
+                } : new WorkTypeDTO(),
                 Salary = job.Salary,
                 CompanyId = job.CompanyId
             });
@@ -166,7 +167,8 @@ namespace TalentSpot.Application.Services.Concrete
 
             foreach (var job in jobs)
             {
-                var benefits = await _jobBenefitRepository.GetBenefitsByJobIdAsync(job.Id);
+                var includes = new List<string> { $"{nameof(JobBenefit.Benefit)}" };
+                var benefits = (await _jobBenefitRepository.List<JobBenefit>(p => p.JobId == job.Id, true, includes)).ToList();
                 var workType = await _workTypeRepository.GetByIdAsync((Guid)job.WorkTypeId);
 
                 jobDTOs.Add(new JobDTO
@@ -194,47 +196,49 @@ namespace TalentSpot.Application.Services.Concrete
             return ResponseMessage<List<JobDTO>>.SuccessResponse(jobDTOs);
         }
 
-        public async Task<bool> UpdateJobAsync(JobUpdateDTO jobUpdateDTO)
+        public async Task<ResponseMessage<JobDTO>> UpdateJobAsync(JobUpdateDTO jobUpdateDTO)
         {
             var existingJob = await _jobRepository.GetByIdAsync(jobUpdateDTO.Id);
             if (existingJob == null)
             {
-                //return ResponseMessage<JobDTO>.FailureResponse("İlan bulunamadı.");
+                return ResponseMessage<JobDTO>.FailureResponse("İlan bulunamadı.");
             }
 
-            // WorkType kontrolü
+            // WorkType checks
             var workType = await _workTypeRepository.GetByIdAsync(jobUpdateDTO.WorkTypeId);
             if (workType == null)
             {
-                //return ResponseMessage<JobDTO>.FailureResponse("Geçersiz çalışma türü.");
+                return ResponseMessage<JobDTO>.FailureResponse("Geçersiz çalışma türü.");
             }
 
-            // Benefits kontrolü
-            //var benefits = await _benefitRepository.GetByIdsAsync(jobUpdateDTO.BenefitIds);
-            //if (benefits == null || !benefits.Any())
-            //{
-            //    //return ResponseMessage<JobDTO>.FailureResponse("Geçersiz yan haklar.");
-            //}
+            // Benefits checks
+            var benefits = (await _benefitRepository.List<Benefit>(p => jobUpdateDTO.BenefitIds.Contains(p.Id))).ToList();
+            if (benefits == null || !benefits.Any())
+            {
+                return ResponseMessage<JobDTO>.FailureResponse("Geçersiz yan haklar.");
+            }
 
-            // Job güncellemesi
+            // Job updates
             existingJob.Position = jobUpdateDTO.Position;
             existingJob.Description = jobUpdateDTO.Description;
             existingJob.WorkTypeId = jobUpdateDTO.WorkTypeId;
             existingJob.Salary = jobUpdateDTO.Salary;
+            existingJob.QualityScore = await CalculateQualityScoreAsync(jobUpdateDTO.WorkTypeId, jobUpdateDTO.Salary, jobUpdateDTO.BenefitIds, jobUpdateDTO.Description);
+            existingJob.JobBenefits = jobUpdateDTO.BenefitIds.Select(p => new JobBenefit
+            {
+                JobId = jobUpdateDTO.Id,
+                BenefitId = p
+            }).ToList();
 
-            // JobBenefits güncellemesi
-            //await _jobBenefitRepository.DeleteByJobIdAsync(jobUpdateDTO.Id);
-            //foreach (var benefit in benefits)
-            //{
-            //    await _jobBenefitRepository.AddAsync(new JobBenefit
-            //    {
-            //        JobId = jobUpdateDTO.Id,
-            //        BenefitId = benefit.Id
-            //    });
-            //}
+            // JobBenefits updates
+            var deletedJobBenefits = (await _jobBenefitRepository.List<JobBenefit>(p => p.JobId == jobUpdateDTO.Id)).ToList();
+            await _jobBenefitRepository.DeleteRangeAsync(deletedJobBenefits);
+
 
             await _jobRepository.UpdateAsync(existingJob);
-            return await _unitOfWork.CompleteAsync();
+            await _unitOfWork.CompleteAsync();
+
+            return ResponseMessage<JobDTO>.SuccessResponse(null);
         }
 
         public async Task<bool> DeleteJobAsync(Guid id)
@@ -256,8 +260,9 @@ namespace TalentSpot.Application.Services.Concrete
             var jobDTOs = new List<JobDTO>();
             foreach (var job in jobs)
             {
-                var benefits = await _jobBenefitRepository.GetBenefitsByJobIdAsync(job.Id);
-                //var workType = await _workTypeRepository.GetByIdAsync(job.WorkTypeId);
+                var includes = new List<string> { $"{nameof(JobBenefit.Benefit)}" };
+                var benefits = (await _jobBenefitRepository.List<JobBenefit>(p => p.JobId == job.Id, true, includes)).ToList();
+                var workType = job.WorkTypeId.HasValue ? await _workTypeRepository.GetByIdAsync(job.WorkTypeId.Value) : null;
 
                 jobDTOs.Add(new JobDTO
                 {
@@ -266,8 +271,16 @@ namespace TalentSpot.Application.Services.Concrete
                     Description = job.Description,
                     ExpirationDate = job.ExpirationDate,
                     QualityScore = job.QualityScore,
-                    //Benefits = string.Join(", ", benefits.Select(b => b.Name)),
-                    //WorkType = workType?.Name ?? "Tanımsız",
+                    Benefits = benefits != null && benefits.Any() ? benefits.Select(p => new BenefitDTO()
+                    {
+                        Name = p.Benefit.Name,
+                        Id = p.Benefit.Id
+                    }).ToList() : new List<BenefitDTO>(),
+                    WorkType = new WorkTypeDTO()
+                    {
+                        Name = workType?.Name ?? "",
+                        Id = workType?.Id
+                    },
                     Salary = job.Salary,
                     CompanyId = job.CompanyId
                 });
@@ -279,29 +292,29 @@ namespace TalentSpot.Application.Services.Concrete
         private async Task<bool> ContainsForbiddenWordsAsync(string description)
         {
             var forbiddenWords = await _forbiddenWordsService.GetAllForbiddenWordsAsync();
-            return forbiddenWords.Select(p=>p.).Any(word => description.Contains(word, StringComparison.OrdinalIgnoreCase));
+            return forbiddenWords.Select(p => p.Word).Any(word => description.Contains(word, StringComparison.OrdinalIgnoreCase));
         }
 
-        private async Task<int> CalculateQualityScoreAsync(JobCreateDTO jobDTO)
+        private async Task<int> CalculateQualityScoreAsync(Guid? workTypeId, int? salary, List<Guid> benefitIds, string description)
         {
             int score = 0;
 
-            if (jobDTO.WorkTypeId != null)
+            if (workTypeId != null)
             {
                 score++;
             }
 
-            if (jobDTO.Salary.HasValue)
+            if (salary.HasValue)
             {
                 score++;
             }
 
-            if (jobDTO.BenefitIds.Count() > 0)
+            if (benefitIds.Count() > 0)
             {
                 score++;
             }
 
-            if (!await ContainsForbiddenWordsAsync(jobDTO.Description))
+            if (!await ContainsForbiddenWordsAsync(description))
             {
                 score += 2;
             }

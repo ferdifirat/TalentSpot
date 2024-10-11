@@ -14,7 +14,7 @@ The TalentSpot project is a job listing application designed for employers to re
 ## Getting Started
 
 ### Prerequisites
-- .NET 6 SDK
+- .NET 8 SDK
 - Docker
 - PostgreSQL
 
@@ -28,9 +28,3 @@ The TalentSpot project is a job listing application designed for employers to re
 Ensure you have Docker installed and running. Then, create and start the PostgreSQL container:
    ```bash
    docker-compose up -d
-
-
-API Endpoints
-User Registration: POST **/api/users/register**
-User Login: POST **/api/users/login**
-Create Job: POST **/api/jobs**

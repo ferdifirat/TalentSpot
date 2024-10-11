@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
+using TalentSpot.Application.DTOs;
 using TalentSpot.Domain.Entities;
 using TalentSpot.Domain.Interfaces;
 
@@ -53,19 +54,35 @@ namespace TalentSpot.Application.Services.Concrete
             return benefit;
         }
 
-        public async Task AddBenefitAsync(Benefit benefit)
+        public async Task<ResponseMessage<Benefit>> AddBenefitAsync(Benefit benefit)
         {
+            var existingBenefit = await _benefitRepository.FindAsync(b => b.Name.ToLower() == benefit.Name.ToLower());
+
+            if (existingBenefit != null)
+            {
+                return ResponseMessage<Benefit>.FailureResponse("Yan hak zaten mevcut.");
+            }
+
             await _benefitRepository.AddAsync(benefit);
             await _unitOfWork.CompleteAsync();
             await _cache.RemoveAsync("benefits");
+            return ResponseMessage<Benefit>.SuccessResponse(benefit);
         }
 
-        public async Task UpdateBenefitAsync(Benefit benefit)
+        public async Task<ResponseMessage<Benefit>> UpdateBenefitAsync(Benefit benefit)
         {
+            var existingBenefit = await _benefitRepository.FindAsync(b => b.Name.ToLower() == benefit.Name.ToLower() && b.Id != benefit.Id);
+
+            if (existingBenefit != null)
+            {
+                return ResponseMessage<Benefit>.FailureResponse("Aynı yan hak zaten başka bir kayıt olarak mevcut.");
+            }
+
             await _benefitRepository.UpdateAsync(benefit);
             await _unitOfWork.CompleteAsync();
             await _cache.RemoveAsync("benefits");
             await _cache.RemoveAsync($"benefit-{benefit.Id}");
+            return ResponseMessage<Benefit>.SuccessResponse(benefit);
         }
 
         public async Task DeleteBenefitAsync(Guid id)

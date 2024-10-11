@@ -8,8 +8,8 @@ namespace TalentSpot.Application.Services
     {
         Task<IEnumerable<WorkType>> GetAllWorkTypesAsync();
         Task<WorkType> GetWorkTypeByIdAsync(Guid id);
-        Task AddWorkTypeAsync(WorkType workType);
-        Task UpdateWorkTypeAsync(WorkType workType);
+        Task<ResponseMessage<WorkType>> AddWorkTypeAsync(WorkType workType);
+        Task<ResponseMessage<WorkType>> UpdateWorkTypeAsync(WorkType workType);
         Task DeleteWorkTypeAsync(Guid id);
     }
 }

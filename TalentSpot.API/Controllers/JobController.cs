@@ -2,6 +2,7 @@ using TalentSpot.Application.DTOs;
 using TalentSpot.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace TalentSpot.API.Controllers
 {
@@ -46,7 +47,15 @@ namespace TalentSpot.API.Controllers
         [HttpPost]
         public async Task<ActionResult<JobDTO>> CreateJob([FromBody] JobCreateDTO jobCreateDTO)
         {
-            var createdJob = await _jobService.CreateJobAsync(jobCreateDTO);
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            var userId = Guid.Parse(userIdClaim.Value);
+            var createdJob = await _jobService.CreateJobAsync(jobCreateDTO, userId);
 
             if (!createdJob.Success)
             {

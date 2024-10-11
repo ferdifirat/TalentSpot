@@ -1,4 +1,5 @@
 ﻿using TalentSpot.Application.DTOs;
+using TalentSpot.Domain.Entities;
 using TalentSpot.Domain.Interfaces;
 
 namespace TalentSpot.Application.Services.Concrete
@@ -16,7 +17,10 @@ namespace TalentSpot.Application.Services.Concrete
 
         public async Task<ResponseMessage<List<CompanyDTO>>> GetAllCompanyAsync()
         {
-            var companies = await _companyRepository.GetAllAsync();
+
+            var includes = new List<string> { $"{nameof(Company.User)}", };
+            var companies = (await _companyRepository.List<Company>(true, includes)).ToList();
+
             if (companies == null || !companies.Any())
             {
                 return ResponseMessage<List<CompanyDTO>>.FailureResponse("İlan bulunamadı.");
@@ -45,7 +49,7 @@ namespace TalentSpot.Application.Services.Concrete
 
         public async Task<ResponseMessage<CompanyDTO>> GetCompanyAsync(Guid id)
         {
-            var company = await _companyRepository.GetByIdAsync(id);
+            var company = await _companyRepository.GetById<Company>(id, true);
             if (company == null)
             {
                 return ResponseMessage<CompanyDTO>.FailureResponse("Şirket bulunamadı.");
@@ -60,6 +64,8 @@ namespace TalentSpot.Application.Services.Concrete
                 User = new UserDTO()
                 {
                     PhoneNumber = company.User.PhoneNumber,
+                    Id = company.User.Id,
+                    Email = company.User.Email,
                 }
 
             });

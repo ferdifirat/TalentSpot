@@ -21,7 +21,7 @@ namespace TalentSpot.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<JobDTO>>> GetAllJobs()
         {
-            var jobs = await _companyService.GetAllJobAsync();
+            var jobs = await _companyService.GetAllCompanyAsync();
 
             if (!jobs.Success)
             {
