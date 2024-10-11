@@ -5,8 +5,8 @@ using TalentSpot.Domain.Entities;
 
 namespace TalentSpot.Infrastructure.Repositories
 {
-    public class CompanyRepository : BaseRepository<Company>, ICompanyRepository
+    public class WorkTypeRepository : BaseRepository<WorkType>, IWorkTypeRepository
     {
-        public CompanyRepository(ApplicationDbContext context) : base(context) { }
+        public WorkTypeRepository(ApplicationDbContext context) : base(context) { }
     }
 }

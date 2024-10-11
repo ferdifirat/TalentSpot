@@ -1,4 +1,6 @@
-﻿namespace TalentSpot.Application.DTOs
+﻿using TalentSpot.Domain.Entities;
+
+namespace TalentSpot.Application.DTOs
 {
     public class JobDTO
     {
@@ -7,8 +9,8 @@
         public string Description { get; set; }
         public DateTime ExpirationDate { get; set; }
         public int QualityScore { get; set; }
-        public string? Benefits { get; set; }
-        public string WorkType { get; set; }
+        public List<Benefit> Benefits { get; set; }
+        public WorkType WorkType{ get; set; }
         public decimal? Salary { get; set; }
         public Guid CompanyId { get; set; }
     }

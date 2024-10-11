@@ -16,13 +16,6 @@ namespace TalentSpot.API.Controllers
             _companyService = companyService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> RegisterCompany([FromBody] CompanyCreateDTO companyCreateDTO)
-        {
-            var result = await _companyService.RegisterCompanyAsync(companyCreateDTO);
-            return Ok(result);
-        }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCompany(Guid id)
         {

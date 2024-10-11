@@ -6,6 +6,10 @@ using TalentSpot.Domain.Interfaces;
 using TalentSpot.Infrastructure.Data;
 using TalentSpot.Infrastructure.Repositories;
 using TalentSpot.API.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.Extensions.Caching.Distributed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,8 +42,36 @@ builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
-builder.Services.AddScoped<IForbiddenWordsService, ForbiddenWordsService>();
+builder.Services.AddScoped<IForbiddenWordService, ForbiddenWordService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// JWT Authentication Ayarlarý
+var jwtSecret = builder.Configuration["Jwt:Secret"];
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "yourapp",
+        ValidAudience = "yourapp",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret))
+    };
+});
+
+builder.Services.AddScoped<IUserService, UserService>(provider =>
+        new UserService(
+            provider.GetRequiredService<IUserRepository>(),
+            provider.GetRequiredService<IUnitOfWork>(),
+            provider.GetRequiredService<ICompanyRepository>(),
+            provider.GetRequiredService<IDistributedCache>(),
+            jwtSecret));
 
 // Add services to the container.
 
@@ -60,6 +92,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 
 app.UseAuthorization();
 

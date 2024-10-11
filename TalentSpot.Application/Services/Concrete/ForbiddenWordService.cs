@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace TalentSpot.Application.Services.Concrete
 {
-    public class ForbiddenWordsService : IForbiddenWordsService
+    public class ForbiddenWordService : IForbiddenWordService
     {
         private readonly IDistributedCache _cache;
         private const string ForbiddenWordsKey = "ForbiddenWords";
 
-        public ForbiddenWordsService(IDistributedCache cache)
+        public ForbiddenWordService(IDistributedCache cache)
         {
             _cache = cache;
         }

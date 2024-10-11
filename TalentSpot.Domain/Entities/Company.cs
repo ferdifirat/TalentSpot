@@ -4,16 +4,11 @@ namespace TalentSpot.Domain.Entities
 {
     public class Company : BaseEntity
     {
-        [Required]
-        public string PhoneNumber { get; set; }
-
-        [Required]
         public string Name { get; set; }
-
-        [Required]
         public string Address { get; set; }
-
-        [Required]
-        public int AllowedJobPostings { get; set; } = 2;
+        public int AllowedJobPostings { get; set; }
+        public Guid UserId { get; set; }
+        public User User { get; set; }
+        public List<Job> Jobs { get; set; }
     }
 }

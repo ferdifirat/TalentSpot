@@ -2,7 +2,7 @@
 
 namespace TalentSpot.Domain.Interfaces
 {
-    public interface ICompanyRepository : IBaseRepository<Company>
+    public interface IWorkTypeRepository : IBaseRepository<WorkType>
     {
     }
 }

@@ -3,7 +3,7 @@ using TalentSpot.Domain.Interfaces;
 
 namespace TalentSpot.Application.Services
 {
-    public interface IForbiddenWordsService
+    public interface IForbiddenWordService
     {
       Task SetForbiddenWordsAsync(IEnumerable<string> words);
 

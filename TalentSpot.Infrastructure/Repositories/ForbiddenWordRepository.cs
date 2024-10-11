@@ -5,8 +5,8 @@ using TalentSpot.Domain.Entities;
 
 namespace TalentSpot.Infrastructure.Repositories
 {
-    public class CompanyRepository : BaseRepository<Company>, ICompanyRepository
+    public class ForbiddenWordRepository : BaseRepository<ForbiddenWord>, IForbiddenWordRepository
     {
-        public CompanyRepository(ApplicationDbContext context) : base(context) { }
+        public ForbiddenWordRepository(ApplicationDbContext context) : base(context) { }
     }
 }

@@ -15,40 +15,6 @@ namespace TalentSpot.Application.Services.Concrete
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ResponseMessage<CompanyDTO>> RegisterCompanyAsync(CompanyCreateDTO companyDTO)
-        {
-            var existingCompany = await _companyRepository.GetByPhoneNumberAsync(companyDTO.PhoneNumber);
-            if (existingCompany != null)
-            {
-                return ResponseMessage<CompanyDTO>.FailureResponse("Bu telefon numarasıyla kayıtlı bir firma bulunmaktadır.");
-            }
-
-            var company = new Company
-            {
-                Id = Guid.NewGuid(),
-                PhoneNumber = companyDTO.PhoneNumber,
-                Name = companyDTO.Name,
-                Address = companyDTO.Address
-            };
-
-            await _companyRepository.AddAsync(company);
-            var isCreated = await _unitOfWork.CompleteAsync();
-
-            if (!isCreated)
-            {
-                return ResponseMessage<CompanyDTO>.FailureResponse("Şirket bilgileri kaydedilemedi.");
-            }
-
-            return ResponseMessage<CompanyDTO>.SuccessResponse(new CompanyDTO
-            {
-                Id = company.Id,
-                PhoneNumber = company.PhoneNumber,
-                Name = company.Name,
-                Address = company.Address,
-                AllowedJobPostings = company.AllowedJobPostings
-            });
-        }
-
         public async Task<ResponseMessage<CompanyDTO>> GetCompanyAsync(Guid id)
         {
             var company = await _companyRepository.GetByIdAsync(id);
@@ -60,7 +26,7 @@ namespace TalentSpot.Application.Services.Concrete
             return ResponseMessage<CompanyDTO>.SuccessResponse(new CompanyDTO
             {
                 Id = company.Id,
-                PhoneNumber = company.PhoneNumber,
+                PhoneNumber = company.User.PhoneNumber,
                 Name = company.Name,
                 Address = company.Address,
                 AllowedJobPostings = company.AllowedJobPostings
@@ -75,7 +41,6 @@ namespace TalentSpot.Application.Services.Concrete
                 return ResponseMessage<CompanyDTO>.FailureResponse("Şirket bulunamadı.");
             }
 
-            existingCompany.PhoneNumber = companyDTO.PhoneNumber;
             existingCompany.Name = companyDTO.Name;
             existingCompany.Address = companyDTO.Address;
 
@@ -91,7 +56,7 @@ namespace TalentSpot.Application.Services.Concrete
             return ResponseMessage<CompanyDTO>.SuccessResponse(new CompanyDTO()
             {
                 Id = existingCompany.Id,
-                PhoneNumber = existingCompany.PhoneNumber,
+                PhoneNumber = existingCompany.User.PhoneNumber,
                 Name = existingCompany.Name,
                 Address = existingCompany.Address,
                 AllowedJobPostings = existingCompany.AllowedJobPostings

@@ -15,9 +15,9 @@ namespace TalentSpot.Domain.Entities
 
         public int QualityScore { get; set; }
 
-        public string Benefits { get; set; }
-
-        public string WorkType { get; set; }
+        public ICollection<JobBenefit> JobBenefits { get; set; }
+        public Guid? WorkTypeId { get; set; }
+        public WorkType WorkType { get; set; }
 
         public decimal? Salary { get; set; }
 
