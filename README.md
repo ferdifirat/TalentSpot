@@ -29,12 +29,8 @@ Ensure you have Docker installed and running. Then, create and start the Postgre
    ```bash
    docker-compose up -d
 
-Forbidden Words Management
-Get Forbidden Words:
-GET /api/forbiddenwords
-Create Forbidden Word:
-POST /api/forbiddenwords
-Update Forbidden Word:
-PUT /api/forbiddenwords/{id}
-Delete Forbidden Word:
-DELETE /api/forbiddenwords/{id}
+
+API Endpoints
+User Registration: POST **/api/users/register**
+User Login: POST **/api/users/login**
+Create Job: POST **/api/jobs**
