@@ -67,7 +67,8 @@ namespace TalentSpot.Application.Services.Concrete
 
                 return ResponseMessage<UserDTO>.SuccessResponse(new UserDTO()
                 {
-                    Company = newCompany,
+                    CompanyName  = newCompany.Name,
+                    Address = newCompany.Address,
                     Email = newUser.Email,
                     Id = newUser.Id,
                     PhoneNumber = newUser.PhoneNumber,
@@ -110,15 +111,16 @@ namespace TalentSpot.Application.Services.Concrete
 
         private string GenerateJwtToken(User user)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecret));
+            // Anahtarınızı 256 bit uzunluğunda bir string ile oluşturun.
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourVeryLongSecretKeyThatIsAtLeast32Characters")); // En az 32 karakter olmalı
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
             {
-            new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
-        };
+        new Claim(JwtRegisteredClaimNames.Sub, user.PhoneNumber),
+        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+    };
 
             var token = new JwtSecurityToken(
                 issuer: "yourapp",

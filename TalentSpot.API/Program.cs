@@ -44,6 +44,11 @@ builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IForbiddenWordService, ForbiddenWordService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IWorkTypeRepository, WorkTypeRepository>();
+builder.Services.AddScoped<IBenefitRepository, BenefitRepository>();
+builder.Services.AddScoped<IJobBenefitRepository, JobBenefitRepository>();
+builder.Services.AddScoped<IForbiddenWordRepository, ForbiddenWordRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // JWT Authentication Ayarlarý
 var jwtSecret = builder.Configuration["Jwt:Secret"];
@@ -79,6 +84,24 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// Veritabaný baðlantýsýný kontrol et
+try
+{
+    using (var scope = builder.Services.BuildServiceProvider().CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        dbContext.Database.OpenConnection(); // Baðlantýyý açmayý dener
+        dbContext.Database.CloseConnection(); // Baðlantýyý kapat
+        Console.WriteLine("Veritabaný baðlantýsý baþarýlý.");
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine("Veritabaný baðlantýsý baþarýsýz: " + ex.Message);
+}
 
 var app = builder.Build();
 

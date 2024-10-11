@@ -55,9 +55,9 @@ namespace TalentSpot.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateJob(Guid id, [FromBody] JobDTO jobDTO)
+        public async Task<ActionResult> UpdateJob(Guid id, [FromBody] JobUpdateDTO jobUpdateDTO)
         {
-            var result = await _jobService.UpdateJobAsync(jobDTO);
+            var result = await _jobService.UpdateJobAsync(jobUpdateDTO);
             return Ok(result);
         }
 
