@@ -11,7 +11,7 @@ namespace TalentSpot.Domain.Entities
         public string Description { get; set; }
 
         [Required]
-        public DateTime ExpirationDate { get; set; } // Yayında kalma süresi
+        public DateTime ExpirationDate { get; set; }
 
         public int QualityScore { get; set; }
 
@@ -21,7 +21,7 @@ namespace TalentSpot.Domain.Entities
 
         public decimal? Salary { get; set; }
 
-        public Guid CompanyId { get; set; } // Foreign Key
-        public Company Company { get; set; } // Navigation Property
+        public Guid CompanyId { get; set; }
+        public Company Company { get; set; }
     }
 }

@@ -5,7 +5,7 @@ namespace TalentSpot.Application.Services
 {
     public interface IJobService
     {
-        Task<ResponseMessage<JobDTO>> CreateJobAsync(JobDTO jobDTO);
+        Task<ResponseMessage<JobDTO>> CreateJobAsync(JobCreateDTO jobDTO);
         Task<ResponseMessage<JobDTO>> GetJobAsync(Guid id);
         Task<bool> UpdateJobAsync(JobDTO jobDTO);
         Task<bool> DeleteJobAsync(Guid id);

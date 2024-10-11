@@ -22,7 +22,7 @@ namespace TalentSpot.Application.Services.Concrete
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ResponseMessage<JobDTO>> CreateJobAsync(JobDTO jobDTO)
+        public async Task<ResponseMessage<JobDTO>> CreateJobAsync(JobCreateDTO jobDTO)
         {
             var company = await _companyRepository.GetByIdAsync(jobDTO.CompanyId);
             if (company == null)
@@ -84,7 +84,7 @@ namespace TalentSpot.Application.Services.Concrete
             var job = await _jobRepository.GetByIdAsync(id);
             if (job == null)
             {
-                throw new Exception("İlan bulunamadı.");
+                ResponseMessage<JobDTO>.FailureResponse("İlan bulunamadı.");
             }
 
             return ResponseMessage<JobDTO>.SuccessResponse(new JobDTO
@@ -130,7 +130,7 @@ namespace TalentSpot.Application.Services.Concrete
             var existingJob = await _jobRepository.GetByIdAsync(jobDTO.Id);
             if (existingJob == null)
             {
-                throw new Exception("İlan bulunamadı.");
+                ResponseMessage<List<JobDTO>>.FailureResponse("İlan bulunamadı.");
             }
 
             // Update the job properties
@@ -187,7 +187,7 @@ namespace TalentSpot.Application.Services.Concrete
             return forbiddenWords.Any(word => description.Contains(word, StringComparison.OrdinalIgnoreCase));
         }
 
-        private async Task<int> CalculateQualityScoreAsync(JobDTO jobDTO)
+        private async Task<int> CalculateQualityScoreAsync(JobCreateDTO jobDTO)
         {
             int score = 0;
 

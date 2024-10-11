@@ -19,6 +19,12 @@ namespace TalentSpot.API.Controllers
         public async Task<ActionResult<IEnumerable<JobDTO>>> GetJobs()
         {
             var jobs = await _jobService.GetAllJobAsync();
+
+            if (!jobs.Success)
+            {
+                return NotFound(jobs);
+            }
+
             return Ok(jobs);
         }
 
@@ -26,13 +32,25 @@ namespace TalentSpot.API.Controllers
         public async Task<ActionResult<JobDTO>> GetJob(Guid id)
         {
             var job = await _jobService.GetJobAsync(id);
+
+            if (!job.Success)
+            {
+                return NotFound(job);
+            }
+
             return Ok(job);
         }
 
         [HttpPost]
-        public async Task<ActionResult<JobDTO>> CreateJob([FromBody] JobDTO jobDTO)
+        public async Task<ActionResult<JobDTO>> CreateJob([FromBody] JobCreateDTO jobCreateDTO)
         {
-            var createdJob = await _jobService.CreateJobAsync(jobDTO);
+            var createdJob = await _jobService.CreateJobAsync(jobCreateDTO);
+
+            if (!createdJob.Success)
+            {
+                return BadRequest(createdJob);
+            }
+
             return Ok(createdJob);
         }
 
@@ -52,13 +70,19 @@ namespace TalentSpot.API.Controllers
                 return NotFound();
             }
 
-            return NoContent();
+            return Ok(id);
         }
 
         [HttpGet("search")]
         public async Task<ActionResult<IEnumerable<JobDTO>>> SearchJobs([FromQuery] DateTime expirationDate)
         {
             var jobs = await _jobService.SearchJobsByExpirationDateAsync(expirationDate);
+
+            if (!jobs.Success)
+            {
+                return NotFound(jobs);
+            }
+
             return Ok(jobs);
         }
     }

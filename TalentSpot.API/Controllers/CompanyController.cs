@@ -17,9 +17,9 @@ namespace TalentSpot.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RegisterCompany([FromBody] CompanyDTO companyDTO)
+        public async Task<IActionResult> RegisterCompany([FromBody] CompanyCreateDTO companyCreateDTO)
         {
-            var result = await _companyService.RegisterCompanyAsync(companyDTO);
+            var result = await _companyService.RegisterCompanyAsync(companyCreateDTO);
             return Ok(result);
         }
 

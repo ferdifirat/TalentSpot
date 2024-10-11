@@ -15,7 +15,7 @@ namespace TalentSpot.Application.Services.Concrete
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ResponseMessage<CompanyDTO>> RegisterCompanyAsync(CompanyDTO companyDTO)
+        public async Task<ResponseMessage<CompanyDTO>> RegisterCompanyAsync(CompanyCreateDTO companyDTO)
         {
             var existingCompany = await _companyRepository.GetByPhoneNumberAsync(companyDTO.PhoneNumber);
             if (existingCompany != null)
@@ -28,8 +28,7 @@ namespace TalentSpot.Application.Services.Concrete
                 Id = Guid.NewGuid(),
                 PhoneNumber = companyDTO.PhoneNumber,
                 Name = companyDTO.Name,
-                Address = companyDTO.Address,
-                AllowedJobPostings = companyDTO.AllowedJobPostings
+                Address = companyDTO.Address
             };
 
             await _companyRepository.AddAsync(company);
