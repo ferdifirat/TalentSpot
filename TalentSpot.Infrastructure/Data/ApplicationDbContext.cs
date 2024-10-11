@@ -81,6 +81,28 @@ namespace TalentSpot.Infrastructure.Data
 
             modelBuilder.Entity<ForbiddenWord>()
                 .HasKey(fw => fw.Id);
+
+            // SeedDatas
+            modelBuilder.Entity<WorkType>().HasData(
+                new WorkType { Id = Guid.NewGuid(), Name = "Full-Time" },
+                new WorkType { Id = Guid.NewGuid(), Name = "Part-Time" },
+                new WorkType { Id = Guid.NewGuid(), Name = "Freelance" },
+                new WorkType { Id = Guid.NewGuid(), Name = "Internship" }
+            );
+
+            modelBuilder.Entity<Benefit>().HasData(
+                new Benefit { Id = Guid.NewGuid(), Name = "Health Insurance" },
+                new Benefit { Id = Guid.NewGuid(), Name = "Paid Vacation" },
+                new Benefit { Id = Guid.NewGuid(), Name = "Remote Work" },
+                new Benefit { Id = Guid.NewGuid(), Name = "Flexible Hours" }
+            );
+
+            modelBuilder.Entity<ForbiddenWord>().HasData(
+                new ForbiddenWord { Id = Guid.NewGuid(), Word = "Prohibited" },
+                new ForbiddenWord { Id = Guid.NewGuid(), Word = "Illegal" },
+                new ForbiddenWord { Id = Guid.NewGuid(), Word = "Banned" },
+                new ForbiddenWord { Id = Guid.NewGuid(), Word = "Restricted" }
+            );
         }
     }
 }

@@ -1,69 +1,62 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using TalentSpot.Application.Services;
+using TalentSpot.Domain.Entities;
 
 namespace TalentSpot.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ForbiddenWordsController : ControllerBase
+    public class ForbiddenWordController : ControllerBase
     {
-        private readonly IDistributedCache _cache;
-        private const string ForbiddenWordsCacheKey = "ForbiddenWords";
+        private readonly IForbiddenWordService _forbiddenWordService;
 
-        public ForbiddenWordsController(IDistributedCache cache)
+        public ForbiddenWordController(IForbiddenWordService forbiddenWordService)
         {
-            _cache = cache;
+            _forbiddenWordService = forbiddenWordService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetForbiddenWords()
         {
-            var forbiddenWords = await GetForbiddenWordsFromCache();
+            var forbiddenWords = await _forbiddenWordService.GetAllForbiddenWordsAsync();
             return Ok(forbiddenWords);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetForbiddenWord(Guid id)
+        {
+            var forbiddenWord = await _forbiddenWordService.GetForbiddenWordByIdAsync(id);
+            if (forbiddenWord == null)
+            {
+                return NotFound();
+            }
+            return Ok(forbiddenWord);
+        }
+
         [HttpPost]
-        public async Task<IActionResult> AddForbiddenWord([FromBody] string word)
+        public async Task<IActionResult> AddForbiddenWord([FromBody] ForbiddenWord forbiddenWord)
         {
-            if (string.IsNullOrWhiteSpace(word))
-            {
-                return BadRequest("Kelime boþ olamaz.");
-            }
-
-            var forbiddenWords = await GetForbiddenWordsFromCache();
-            if (!forbiddenWords.Contains(word))
-            {
-                forbiddenWords.Add(word);
-                await SetForbiddenWordsToCache(forbiddenWords);
-            }
-
-            return CreatedAtAction(nameof(GetForbiddenWords), new { word });
+            await _forbiddenWordService.AddForbiddenWordAsync(forbiddenWord);
+            return CreatedAtAction(nameof(GetForbiddenWord), new { id = forbiddenWord.Id }, forbiddenWord);
         }
 
-        [HttpDelete("{word}")]
-        public async Task<IActionResult> DeleteForbiddenWord(string word)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateForbiddenWord(Guid id, [FromBody] ForbiddenWord forbiddenWord)
         {
-            var forbiddenWords = await GetForbiddenWordsFromCache();
-            if (forbiddenWords.Contains(word))
+            if (id != forbiddenWord.Id)
             {
-                forbiddenWords.Remove(word);
-                await SetForbiddenWordsToCache(forbiddenWords);
-                return NoContent();
+                return BadRequest();
             }
-
-            return NotFound("Yasaklý kelime bulunamadý.");
+            await _forbiddenWordService.UpdateForbiddenWordAsync(forbiddenWord);
+            return NoContent();
         }
 
-        private async Task<List<string>> GetForbiddenWordsFromCache()
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteForbiddenWord(Guid id)
         {
-            var cachedData = await _cache.GetStringAsync(ForbiddenWordsCacheKey);
-            return string.IsNullOrEmpty(cachedData) ? new List<string>() : Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(cachedData);
-        }
-
-        private async Task SetForbiddenWordsToCache(List<string> forbiddenWords)
-        {
-            var serializedData = Newtonsoft.Json.JsonConvert.SerializeObject(forbiddenWords);
-            await _cache.SetStringAsync(ForbiddenWordsCacheKey, serializedData);
+            await _forbiddenWordService.DeleteForbiddenWordAsync(id);
+            return NoContent();
         }
     }
 }

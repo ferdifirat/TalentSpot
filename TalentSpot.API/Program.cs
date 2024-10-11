@@ -49,6 +49,9 @@ builder.Services.AddScoped<IBenefitRepository, BenefitRepository>();
 builder.Services.AddScoped<IJobBenefitRepository, JobBenefitRepository>();
 builder.Services.AddScoped<IForbiddenWordRepository, ForbiddenWordRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IWorkTypeService, WorkTypeService>();
+builder.Services.AddScoped<IBenefitService, BenefitService>();
+builder.Services.AddScoped<IForbiddenWordService, ForbiddenWordService>();
 
 // JWT Authentication Ayarlarý
 var jwtSecret = builder.Configuration["Jwt:Secret"];

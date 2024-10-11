@@ -262,8 +262,8 @@ namespace TalentSpot.Application.Services.Concrete
 
         private async Task<bool> ContainsForbiddenWordsAsync(string description)
         {
-            var forbiddenWords = await _forbiddenWordsService.GetForbiddenWordsAsync();
-            return forbiddenWords.Any(word => description.Contains(word, StringComparison.OrdinalIgnoreCase));
+            var forbiddenWords = await _forbiddenWordsService.GetAllForbiddenWordsAsync();
+            return forbiddenWords.Select(p=>p.Word).Any(word => description.Contains(word, StringComparison.OrdinalIgnoreCase));
         }
 
         private async Task<int> CalculateQualityScoreAsync(JobCreateDTO jobDTO)

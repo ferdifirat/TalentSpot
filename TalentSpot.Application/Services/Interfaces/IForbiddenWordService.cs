@@ -1,12 +1,13 @@
-﻿using TalentSpot.Application.DTOs;
-using TalentSpot.Domain.Interfaces;
+﻿using TalentSpot.Domain.Entities;
 
 namespace TalentSpot.Application.Services
 {
     public interface IForbiddenWordService
     {
-      Task SetForbiddenWordsAsync(IEnumerable<string> words);
-
-        Task<List<string>> GetForbiddenWordsAsync();
+        Task<IEnumerable<ForbiddenWord>> GetAllForbiddenWordsAsync();
+        Task<ForbiddenWord> GetForbiddenWordByIdAsync(Guid id);
+        Task AddForbiddenWordAsync(ForbiddenWord forbiddenWord);
+        Task UpdateForbiddenWordAsync(ForbiddenWord forbiddenWord);
+        Task DeleteForbiddenWordAsync(Guid id);
     }
 }

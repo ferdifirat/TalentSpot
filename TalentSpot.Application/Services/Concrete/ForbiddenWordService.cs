@@ -3,33 +3,82 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using TalentSpot.Domain.Entities;
+using TalentSpot.Domain.Interfaces;
 
 namespace TalentSpot.Application.Services.Concrete
 {
     public class ForbiddenWordService : IForbiddenWordService
     {
+        private readonly IForbiddenWordRepository _forbiddenWordRepository;
         private readonly IDistributedCache _cache;
-        private const string ForbiddenWordsKey = "ForbiddenWords";
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ForbiddenWordService(IDistributedCache cache)
+        public ForbiddenWordService(IForbiddenWordRepository forbiddenWordRepository, IDistributedCache cache, IUnitOfWork unitOfWork)
         {
+            _forbiddenWordRepository = forbiddenWordRepository;
             _cache = cache;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task SetForbiddenWordsAsync(IEnumerable<string> words)
+        public async Task<IEnumerable<ForbiddenWord>> GetAllForbiddenWordsAsync()
         {
-            // Store the forbidden words as a comma-separated string in Redis
-            var forbiddenWords = string.Join(",", words);
-            await _cache.SetStringAsync(ForbiddenWordsKey, forbiddenWords);
+            var cacheKey = "forbiddenwords";
+            var forbiddenWordsJson = await _cache.GetStringAsync(cacheKey);
+
+            if (!string.IsNullOrEmpty(forbiddenWordsJson))
+            {
+                return JsonSerializer.Deserialize<IEnumerable<ForbiddenWord>>(forbiddenWordsJson);
+            }
+
+            var forbiddenWords = await _forbiddenWordRepository.GetAllAsync();
+            await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(forbiddenWords));
+
+            return forbiddenWords;
         }
 
-        public async Task<List<string>> GetForbiddenWordsAsync()
+        public async Task<ForbiddenWord> GetForbiddenWordByIdAsync(Guid id)
         {
-            var forbiddenWords = await _cache.GetStringAsync(ForbiddenWordsKey);
-            return string.IsNullOrEmpty(forbiddenWords)
-                ? new List<string>()
-                : forbiddenWords.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
+            var cacheKey = $"forbiddenword-{id}";
+            var forbiddenWordJson = await _cache.GetStringAsync(cacheKey);
+
+            if (!string.IsNullOrEmpty(forbiddenWordJson))
+            {
+                return JsonSerializer.Deserialize<ForbiddenWord>(forbiddenWordJson);
+            }
+
+            var forbiddenWord = await _forbiddenWordRepository.GetByIdAsync(id);
+            if (forbiddenWord != null)
+            {
+                await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(forbiddenWord));
+            }
+
+            return forbiddenWord;
+        }
+
+        public async Task AddForbiddenWordAsync(ForbiddenWord forbiddenWord)
+        {
+            await _forbiddenWordRepository.AddAsync(forbiddenWord);
+            await _unitOfWork.CompleteAsync();
+            await _cache.RemoveAsync("forbiddenwords");
+        }
+
+        public async Task UpdateForbiddenWordAsync(ForbiddenWord forbiddenWord)
+        {
+            await _forbiddenWordRepository.UpdateAsync(forbiddenWord);
+            await _unitOfWork.CompleteAsync();
+            await _cache.RemoveAsync("forbiddenwords");
+            await _cache.RemoveAsync($"forbiddenword-{forbiddenWord.Id}");
+        }
+
+        public async Task DeleteForbiddenWordAsync(Guid id)
+        {
+            await _forbiddenWordRepository.DeleteAsync(id);
+            await _unitOfWork.CompleteAsync();
+            await _cache.RemoveAsync("forbiddenwords");
+            await _cache.RemoveAsync($"forbiddenword-{id}");
         }
     }
 }
