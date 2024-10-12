@@ -1,4 +1,5 @@
-﻿using TalentSpot.Application.DTOs;
+﻿using Elastic.Clients.Elasticsearch.IndexLifecycleManagement;
+using TalentSpot.Application.DTOs;
 using TalentSpot.Domain.Entities;
 using TalentSpot.Domain.Interfaces;
 
@@ -56,7 +57,7 @@ namespace TalentSpot.Application.Services.Concrete
             var benefits = new List<Benefit>();
             if (jobDTO.BenefitIds != null)
             {
-                benefits = (await _benefitRepository.FindAsync(p => jobDTO.BenefitIds.Contains(p.Id))).ToList();
+                benefits = (await _benefitRepository.List<Benefit>(p => jobDTO.BenefitIds.Contains(p.Id))).ToList();
                 if (benefits == null || !benefits.Any())
                 {
                     return ResponseMessage<JobDTO>.FailureResponse("Geçersiz yan haklar.");
@@ -168,7 +169,7 @@ namespace TalentSpot.Application.Services.Concrete
             foreach (var job in jobs)
             {
                 var includes = new List<string> { $"{nameof(JobBenefit.Benefit)}" };
-                var benefits = (await _jobBenefitRepository.List<JobBenefit>(p => p.JobId == job.Id, true, includes)).ToList();
+                var jobBenefits = (await _jobBenefitRepository.List<JobBenefit>(p => p.JobId == job.Id, true, includes)).ToList();
                 var workType = await _workTypeRepository.GetByIdAsync((Guid)job.WorkTypeId);
 
                 jobDTOs.Add(new JobDTO
@@ -178,7 +179,7 @@ namespace TalentSpot.Application.Services.Concrete
                     Description = job.Description,
                     ExpirationDate = job.ExpirationDate,
                     QualityScore = job.QualityScore,
-                    Benefits = benefits.Select(p => new BenefitDTO()
+                    Benefits = jobBenefits.Select(p => new BenefitDTO()
                     {
                         Id = p.Benefit.Id,
                         Name = p.Benefit.Name
@@ -275,26 +276,26 @@ namespace TalentSpot.Application.Services.Concrete
                 ExpirationDate = job.ExpirationDate,
                 QualityScore = job.QualityScore,
                 Benefits = job.JobBenefits != null
-                    ? job.JobBenefits.Select(p => new BenefitDTO()
-                    {
-                        Name = p.Benefit.Name ?? string.Empty,
-                        Id = p.Benefit.Id
-                    }).ToList()
-                    : new List<BenefitDTO>(),
+                ? job.JobBenefits.Select(p => new BenefitDTO()
+                {
+                    Name = p.Benefit?.Name ?? string.Empty,
+                    Id = p.Benefit?.Id ?? Guid.Empty
+                }).ToList()
+                : new List<BenefitDTO>(),
                 WorkType = job.WorkType != null
                     ? new WorkTypeDTO
                     {
                         Name = job.WorkType.Name ?? string.Empty,
-                        Id = job.WorkType.Id
+                        Id = job.WorkType?.Id ?? Guid.Empty
                     }
                     : new WorkTypeDTO(),
                 Salary = job.Salary,
                 CompanyId = job.CompanyId,
                 Company = new CompanyDTO()
                 {
-                    Id = job.Company.Id,
-                    Address = job.Company.Address,
-                    Name = job.Company.Name,
+                    Id = job.Company?.Id ?? Guid.Empty,
+                    Address = job.Company?.Address ?? string.Empty,
+                    Name = job.Company?.Name ?? string.Empty,
                 }
             }).ToList();
 

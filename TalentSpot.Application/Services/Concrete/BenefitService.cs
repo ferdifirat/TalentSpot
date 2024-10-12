@@ -3,16 +3,17 @@ using System.Text.Json;
 using TalentSpot.Application.DTOs;
 using TalentSpot.Domain.Entities;
 using TalentSpot.Domain.Interfaces;
+using TalentSpot.Infrastructure.Interfaces;
 
 namespace TalentSpot.Application.Services.Concrete
 {
     public class BenefitService : IBenefitService
     {
         private readonly IBenefitRepository _benefitRepository;
-        private readonly IDistributedCache _cache;
+        private readonly ICacheService _cache;
         private readonly IUnitOfWork _unitOfWork;
 
-        public BenefitService(IBenefitRepository benefitRepository, IDistributedCache cache, IUnitOfWork unitOfWork)
+        public BenefitService(IBenefitRepository benefitRepository, ICacheService cache, IUnitOfWork unitOfWork)
         {
             _benefitRepository = benefitRepository;
             _cache = cache;
@@ -56,9 +57,9 @@ namespace TalentSpot.Application.Services.Concrete
 
         public async Task<ResponseMessage<Benefit>> AddBenefitAsync(Benefit benefit)
         {
-            var existingBenefit = await _benefitRepository.FindAsync(b => b.Name.ToLower() == benefit.Name.ToLower());
+            var existingBenefit = await _benefitRepository.List<Benefit>(b => b.Name.ToLower() == benefit.Name.ToLower());
 
-            if (existingBenefit != null)
+            if (existingBenefit.Any())
             {
                 return ResponseMessage<Benefit>.FailureResponse("Yan hak zaten mevcut.");
             }
@@ -71,9 +72,9 @@ namespace TalentSpot.Application.Services.Concrete
 
         public async Task<ResponseMessage<Benefit>> UpdateBenefitAsync(Benefit benefit)
         {
-            var existingBenefit = await _benefitRepository.FindAsync(b => b.Name.ToLower() == benefit.Name.ToLower() && b.Id != benefit.Id);
+            var existingBenefit = await _benefitRepository.List<Benefit>(b => b.Name.ToLower() == benefit.Name.ToLower() && b.Id != benefit.Id);
 
-            if (existingBenefit != null)
+            if (existingBenefit.Any())
             {
                 return ResponseMessage<Benefit>.FailureResponse("Aynı yan hak zaten başka bir kayıt olarak mevcut.");
             }

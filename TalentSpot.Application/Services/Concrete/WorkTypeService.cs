@@ -1,17 +1,18 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
-using System.Text.Json;
+﻿using System.Text.Json;
 using TalentSpot.Application.DTOs;
 using TalentSpot.Domain.Entities;
 using TalentSpot.Domain.Interfaces;
+using TalentSpot.Infrastructure.Interfaces;
+
 namespace TalentSpot.Application.Services.Concrete
 {
     public class WorkTypeService : IWorkTypeService
     {
         private readonly IWorkTypeRepository _workTypeRepository;
-        private readonly IDistributedCache _cache;
+        private readonly ICacheService _cache;
         private readonly IUnitOfWork _unitOfWork;
 
-        public WorkTypeService(IWorkTypeRepository workTypeRepository, IDistributedCache cache, IUnitOfWork unitOfWork)
+        public WorkTypeService(IWorkTypeRepository workTypeRepository, ICacheService cache, IUnitOfWork unitOfWork)
         {
             _workTypeRepository = workTypeRepository;
             _cache = cache;
@@ -55,9 +56,9 @@ namespace TalentSpot.Application.Services.Concrete
 
         public async Task<ResponseMessage<WorkType>> AddWorkTypeAsync(WorkType workType)
         {
-            var existingWorkType = await _workTypeRepository.FindAsync(wt => wt.Name.ToLower() == workType.Name.ToLower());
+            var existingWorkType = await _workTypeRepository.List<WorkType>(wt => wt.Name.ToLower() == workType.Name.ToLower());
 
-            if (existingWorkType != null)
+            if (existingWorkType.Any())
             {
                 return ResponseMessage<WorkType>.FailureResponse("Çalışma türü zaten mevcut.");
             }
@@ -70,9 +71,9 @@ namespace TalentSpot.Application.Services.Concrete
 
         public async Task<ResponseMessage<WorkType>> UpdateWorkTypeAsync(WorkType workType)
         {
-            var existingWorkType = await _workTypeRepository.FindAsync(wt => wt.Name.ToLower() == workType.Name.ToLower() && wt.Id != workType.Id);
+            var existingWorkType = await _workTypeRepository.List<WorkType>(wt => wt.Name.ToLower() == workType.Name.ToLower() && wt.Id != workType.Id);
 
-            if (existingWorkType != null)
+            if (existingWorkType.Any())
             {
                 return ResponseMessage<WorkType>.FailureResponse("Aynı çalışma türü zaten başka bir kayıt olarak mevcut.");
             }
@@ -88,7 +89,7 @@ namespace TalentSpot.Application.Services.Concrete
         {
             await _workTypeRepository.DeleteAsync(id);
             await _unitOfWork.CompleteAsync();
-            await _cache.RemoveAsync("worktypes"); 
+            await _cache.RemoveAsync("worktypes");
             await _cache.RemoveAsync($"worktype-{id}");
         }
     }

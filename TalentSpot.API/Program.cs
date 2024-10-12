@@ -8,9 +8,10 @@ using TalentSpot.API.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.Extensions.Caching.Distributed;
 using TalentSpot.Infrastructure.ElasticSearch;
 using Nest;
+using TalentSpot.Infrastructure.Interfaces;
+using TalentSpot.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,6 +62,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IWorkTypeService, WorkTypeService>();
 builder.Services.AddScoped<IBenefitService, BenefitService>();
 builder.Services.AddScoped<IForbiddenWordService, ForbiddenWordService>();
+builder.Services.AddScoped<ICacheService, CacheService>();
 
 // JWT Authentication Ayarlarý
 var jwtSecret = builder.Configuration["Jwt:Secret"];
@@ -87,7 +89,7 @@ builder.Services.AddScoped<IUserService, UserService>(provider =>
             provider.GetRequiredService<IUserRepository>(),
             provider.GetRequiredService<IUnitOfWork>(),
             provider.GetRequiredService<ICompanyRepository>(),
-            provider.GetRequiredService<IDistributedCache>(),
+            provider.GetRequiredService<ICacheService>(),
             jwtSecret));
 
 // Add services to the container.

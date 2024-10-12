@@ -7,6 +7,7 @@ using TalentSpot.Application.DTOs;
 using TalentSpot.Domain.Entities;
 using TalentSpot.Domain.Interfaces;
 using TalentSpot.Infrastructure.Helper;
+using TalentSpot.Infrastructure.Interfaces;
 
 namespace TalentSpot.Application.Services.Concrete
 {
@@ -15,13 +16,13 @@ namespace TalentSpot.Application.Services.Concrete
         private readonly IUserRepository _userRepository;
         private readonly IUnitOfWork _unitOfWork;
         private readonly ICompanyRepository _companyRepository;
-        private readonly IDistributedCache _cache;
+        private readonly ICacheService _cache;
         private readonly string _jwtSecret;
 
         public UserService(IUserRepository userRepository, 
             IUnitOfWork unitOfWork, 
             ICompanyRepository companyRepository, 
-            IDistributedCache cache,
+            ICacheService cache,
             string jwtSecret)
         {
             _userRepository = userRepository;
@@ -112,7 +113,7 @@ namespace TalentSpot.Application.Services.Concrete
             await _cache.RemoveAsync(userId);
         }
 
-        private string GenerateJwtToken(User user)
+        public string GenerateJwtToken(User user)
         {
             // Anahtarınızı 256 bit uzunluğunda bir string ile oluşturun.
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourVeryLongSecretKeyThatIsAtLeast32Characters")); // En az 32 karakter olmalı

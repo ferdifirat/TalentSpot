@@ -3,16 +3,17 @@ using System.Text.Json;
 using TalentSpot.Application.DTOs;
 using TalentSpot.Domain.Entities;
 using TalentSpot.Domain.Interfaces;
+using TalentSpot.Infrastructure.Interfaces;
 
 namespace TalentSpot.Application.Services.Concrete
 {
     public class ForbiddenWordService : IForbiddenWordService
     {
         private readonly IForbiddenWordRepository _forbiddenWordRepository;
-        private readonly IDistributedCache _cache;
+        private readonly ICacheService _cache;
         private readonly IUnitOfWork _unitOfWork;
 
-        public ForbiddenWordService(IForbiddenWordRepository forbiddenWordRepository, IDistributedCache cache, IUnitOfWork unitOfWork)
+        public ForbiddenWordService(IForbiddenWordRepository forbiddenWordRepository, ICacheService cache, IUnitOfWork unitOfWork)
         {
             _forbiddenWordRepository = forbiddenWordRepository;
             _cache = cache;
@@ -58,7 +59,7 @@ namespace TalentSpot.Application.Services.Concrete
         {
             var existingWord = (await _forbiddenWordRepository.List<ForbiddenWord>(fw => fw.Word.ToLower() == forbiddenWord.Word.ToLower())).ToList();
 
-            if (existingWord != null)
+            if (existingWord.Any())
             {
                 return ResponseMessage<ForbiddenWord>.FailureResponse("Yasaklı kelime zaten mevcut.");
             }
@@ -73,7 +74,7 @@ namespace TalentSpot.Application.Services.Concrete
         {
             var existingWord = (await _forbiddenWordRepository.List<ForbiddenWord>(fw => fw.Word.ToLower() == forbiddenWord.Word.ToLower() && fw.Id != forbiddenWord.Id)).ToList();
 
-            if (existingWord != null)
+            if (existingWord.Any())
             {
                 return ResponseMessage<ForbiddenWord>.FailureResponse("Aynı kelime zaten başka bir kayıt olarak mevcut.");
             }
