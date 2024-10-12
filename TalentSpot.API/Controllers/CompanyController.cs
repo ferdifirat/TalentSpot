@@ -1,8 +1,7 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TalentSpot.Application.DTOs;
 using TalentSpot.Application.Services;
-using Microsoft.AspNetCore.Mvc;
-using TalentSpot.Application.Services.Concrete;
-using Microsoft.AspNetCore.Authorization;
 
 namespace TalentSpot.API.Controllers
 {

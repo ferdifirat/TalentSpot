@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Nest;
 using TalentSpot.Application.Services.Concrete;
 using TalentSpot.Application.Services;
 using TalentSpot.Domain.Interfaces;
@@ -10,6 +9,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.Caching.Distributed;
+using TalentSpot.Infrastructure.ElasticSearch;
+using Nest;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,15 +30,23 @@ var uri = elasticsearchOptions["Uri"];
 var username = elasticsearchOptions["Username"];
 var password = elasticsearchOptions["Password"];
 
-// Elasticsearch client configuration
-var settings = new ConnectionSettings(new Uri(uri))
-    .DefaultIndex("your_default_index")
-    .BasicAuthentication(username, password);
+// Register the setup class
+builder.Services.AddSingleton<ElasticsearchSetup>();
 
-var client = new ElasticClient(settings);
+// Configure the ElasticClient
+builder.Services.AddSingleton<IElasticClient>(provider =>
+{
+    var settings = new ConnectionSettings(new Uri("http://localhost:9200"))
+        .EnableDebugMode() // Optional: for detailed debugging info
+    .ServerCertificateValidationCallback((o, certificate, chain, errors) => true)
+        .DefaultIndex("jobs").BasicAuthentication(username,password);
+
+
+    return new ElasticClient(settings);
+
+});
 
 // Dependency Injection
-builder.Services.AddSingleton<IElasticClient>(client);
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
@@ -116,6 +125,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+//using (var scope = app.Services.CreateScope())
+//{
+//   var elasticsearchSetup = scope.ServiceProvider.GetRequiredService<ElasticsearchSetup>();
+//    await elasticsearchSetup.EnsureIndexCreatedAsync();  // Await the index creation task
+//}
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

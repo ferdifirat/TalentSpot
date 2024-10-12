@@ -73,7 +73,7 @@ namespace TalentSpot.Application.Services.Concrete
 
         public async Task<ResponseMessage<CompanyDTO>> UpdateCompanyAsync(CompanyDTO companyDTO)
         {
-            var existingCompany = await _companyRepository.GetByIdAsync(companyDTO.Id);
+            var existingCompany = await _companyRepository.GetById<Company>(companyDTO.Id, true);
             if (existingCompany == null)
             {
                 return ResponseMessage<CompanyDTO>.FailureResponse("Şirket bulunamadı.");
@@ -96,11 +96,7 @@ namespace TalentSpot.Application.Services.Concrete
                 Id = existingCompany.Id,
                 Name = existingCompany.Name,
                 Address = existingCompany.Address,
-                AllowedJobPostings = existingCompany.AllowedJobPostings,
-                User = new UserDTO()
-                {
-                    PhoneNumber = existingCompany.User.PhoneNumber,
-                }
+                AllowedJobPostings = existingCompany.AllowedJobPostings
             });
         }
     }

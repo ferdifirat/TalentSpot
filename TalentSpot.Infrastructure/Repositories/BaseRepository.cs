@@ -1,10 +1,9 @@
-﻿using TalentSpot.Domain.Interfaces;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using TalentSpot.Infrastructure.Data;
-using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using TalentSpot.Domain.Interfaces;
+using TalentSpot.Infrastructure.Data;
 
 namespace TalentSpot.Infrastructure.Repositories
 {
@@ -38,7 +37,7 @@ namespace TalentSpot.Infrastructure.Repositories
                 return entity;
 
             var navigations = new List<Task>();
-            if (eager)//JsonIgnore harici olanlar dolduruluyor
+            if (eager)
                 foreach (var property in _context.Model.FindEntityType(typeof(T)).GetNavigations())
                 {
                     PropertyInfo propertyInfo = typeof(T).GetProperty(property.Name);
@@ -73,10 +72,8 @@ namespace TalentSpot.Infrastructure.Repositories
 
         public async Task DeleteRangeAsync(List<T> entities)
         {
-                _dbSet.RemoveRange(entities);
+            _dbSet.RemoveRange(entities);
         }
-
-
 
         public async Task<IEnumerable<T>> List<T>(bool eager = false, IEnumerable<string> includes = null) where T : class
         {
@@ -129,12 +126,3 @@ namespace TalentSpot.Infrastructure.Repositories
         }
     }
 }
-
-//var includes = new List<string> {
-//                $"{nameof(MeetingParticipant.Contact)}",
-//                $"{nameof(MeetingParticipant.Contact)}.{nameof(Contact.Emails)}",
-//                $"{nameof(MeetingParticipant.MeetingParticipantStatus)}",
-//                $"{nameof(MeetingParticipant.MeetingParticipantType)}",
-//                $"{nameof(MeetingParticipant.ParticipantUser)}",
-//            };
-//var meetingParticipant = (await _meetingParticipantRepository.List<MeetingParticipant>(p => p.MeetingParticipantId == meetingContactRequest.MeetingParticipantId, true, includes)).FirstOrDefault();

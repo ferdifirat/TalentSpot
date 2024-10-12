@@ -56,7 +56,7 @@ namespace TalentSpot.Application.Services.Concrete
 
         public async Task<ResponseMessage<ForbiddenWord>> AddForbiddenWordAsync(ForbiddenWord forbiddenWord)
         {
-            var existingWord = await _forbiddenWordRepository.FindAsync(fw => fw.Word.ToLower() == forbiddenWord.Word.ToLower());
+            var existingWord = (await _forbiddenWordRepository.List<ForbiddenWord>(fw => fw.Word.ToLower() == forbiddenWord.Word.ToLower())).ToList();
 
             if (existingWord != null)
             {
@@ -71,8 +71,7 @@ namespace TalentSpot.Application.Services.Concrete
 
         public async Task<ResponseMessage<ForbiddenWord>> UpdateForbiddenWordAsync(ForbiddenWord forbiddenWord)
         {
-            var existingWord = await _forbiddenWordRepository
-                .FindAsync(fw => fw.Word.ToLower() == forbiddenWord.Word.ToLower() && fw.Id != forbiddenWord.Id);
+            var existingWord = (await _forbiddenWordRepository.List<ForbiddenWord>(fw => fw.Word.ToLower() == forbiddenWord.Word.ToLower() && fw.Id != forbiddenWord.Id)).ToList();
 
             if (existingWord != null)
             {
