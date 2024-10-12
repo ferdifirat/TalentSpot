@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using TalentSpot.Application.Constants;
 using TalentSpot.Application.DTOs;
 using TalentSpot.Domain.Entities;
 using TalentSpot.Domain.Interfaces;
@@ -11,6 +12,7 @@ namespace TalentSpot.Application.Services.Concrete
         private readonly IWorkTypeRepository _workTypeRepository;
         private readonly ICacheService _cache;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly string _cacheKey = RedisCacheConstants.WorkTypeCacheKey;
 
         public WorkTypeService(IWorkTypeRepository workTypeRepository, ICacheService cache, IUnitOfWork unitOfWork)
         {
@@ -21,8 +23,7 @@ namespace TalentSpot.Application.Services.Concrete
 
         public async Task<IEnumerable<WorkType>> GetAllWorkTypesAsync()
         {
-            var cacheKey = "worktypes";
-            var workTypesJson = await _cache.GetStringAsync(cacheKey);
+            var workTypesJson = await _cache.GetStringAsync(_cacheKey);
 
             if (!string.IsNullOrEmpty(workTypesJson))
             {
@@ -30,14 +31,14 @@ namespace TalentSpot.Application.Services.Concrete
             }
 
             var workTypes = await _workTypeRepository.GetAllAsync();
-            await _cache.SetStringAsync(cacheKey, JsonSerializer.Serialize(workTypes));
+            await _cache.SetStringAsync(_cacheKey, JsonSerializer.Serialize(workTypes));
 
             return workTypes;
         }
 
         public async Task<WorkType> GetWorkTypeByIdAsync(Guid id)
         {
-            var cacheKey = $"worktype-{id}";
+            var cacheKey = $"{_cacheKey}-{id}";
             var workTypeJson = await _cache.GetStringAsync(cacheKey);
 
             if (!string.IsNullOrEmpty(workTypeJson))
@@ -65,7 +66,7 @@ namespace TalentSpot.Application.Services.Concrete
 
             await _workTypeRepository.AddAsync(workType);
             await _unitOfWork.CompleteAsync();
-            await _cache.RemoveAsync("worktypes");
+            await _cache.RemoveAsync(_cacheKey);
             return ResponseMessage<WorkType>.SuccessResponse(workType);
         }
 
@@ -80,8 +81,8 @@ namespace TalentSpot.Application.Services.Concrete
 
             await _workTypeRepository.UpdateAsync(workType);
             await _unitOfWork.CompleteAsync();
-            await _cache.RemoveAsync("worktypes");
-            await _cache.RemoveAsync($"worktype-{workType.Id}");
+            await _cache.RemoveAsync(_cacheKey);
+            await _cache.RemoveAsync($"{_cacheKey}-{workType.Id}");
             return ResponseMessage<WorkType>.SuccessResponse(workType);
         }
 
@@ -89,8 +90,8 @@ namespace TalentSpot.Application.Services.Concrete
         {
             await _workTypeRepository.DeleteAsync(id);
             await _unitOfWork.CompleteAsync();
-            await _cache.RemoveAsync("worktypes");
-            await _cache.RemoveAsync($"worktype-{id}");
+            await _cache.RemoveAsync(_cacheKey);
+            await _cache.RemoveAsync($"{_cacheKey}-{id}");
         }
     }
 }
