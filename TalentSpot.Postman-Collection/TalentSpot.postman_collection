@@ -25,14 +25,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/WorkType",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/WorkType",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8081",
 							"path": [
-								"api",
 								"WorkType"
 							]
 						}
@@ -67,14 +64,11 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/WorkType/5cd362bc-a6d4-4f87-b267-3f12ca8d1e41",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/WorkType/5cd362bc-a6d4-4f87-b267-3f12ca8d1e41",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8081",
 							"path": [
-								"api",
 								"WorkType",
 								"5cd362bc-a6d4-4f87-b267-3f12ca8d1e41"
 							]
@@ -107,14 +101,11 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/WorkType",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/WorkType",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8081",
 							"path": [
-								"api",
 								"WorkType"
 							]
 						}
@@ -146,12 +137,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/WorkType",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/api/WorkType",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8081",
 							"path": [
 								"api",
 								"WorkType"
@@ -185,12 +174,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/WorkType/df65495c-d829-4fa9-b788-6bdee589b605",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/WorkType/df65495c-d829-4fa9-b788-6bdee589b605",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8081",
 							"path": [
 								"api",
 								"WorkType",
@@ -221,12 +208,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/Benefit",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/Benefit",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8081",
 							"path": [
 								"api",
 								"Benefit"
@@ -260,12 +245,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/Benefit",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/Benefit",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8081",
 							"path": [
 								"api",
 								"Benefit"
@@ -299,12 +282,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/Benefit",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/Benefit",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8081",
 							"path": [
 								"api",
 								"Benefit"
@@ -329,12 +310,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/Benefit/df65495c-d829-4fa9-b788-6bdee589b605",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/Benefit/df65495c-d829-4fa9-b788-6bdee589b605",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8081",
 							"path": [
 								"api",
 								"Benefit",
@@ -360,12 +339,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/Benefit/5cd362bc-a6d4-4f87-b267-3f12ca8d1e41",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/Benefit/5cd362bc-a6d4-4f87-b267-3f12ca8d1e41",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8081",
 							"path": [
 								"api",
 								"Benefit",
@@ -405,14 +382,11 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/Job",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/Job",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8081",
 							"path": [
-								"api",
 								"Job"
 							]
 						}
@@ -435,14 +409,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/Job",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/Job",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8081",
 							"path": [
-								"api",
 								"Job"
 							]
 						}
@@ -465,14 +436,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/Job/aeb8a9a5-62aa-4710-840e-a8943ae80456",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/Job/aeb8a9a5-62aa-4710-840e-a8943ae80456",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8081",
 							"path": [
-								"api",
 								"Job",
 								"aeb8a9a5-62aa-4710-840e-a8943ae80456"
 							]
@@ -505,14 +473,11 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/Job",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/Job",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8081",
 							"path": [
-								"api",
 								"Job"
 							]
 						}
@@ -535,14 +500,11 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8081/api/Job/aeb8a9a5-62aa-4710-840e-a8943ae80456",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/Job/aeb8a9a5-62aa-4710-840e-a8943ae80456",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8081",
 							"path": [
-								"api",
 								"Job",
 								"aeb8a9a5-62aa-4710-840e-a8943ae80456"
 							]
@@ -575,14 +537,11 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8081/api/Job",
-							"protocol": "http",
+							"raw": "{{BaseUrl}}/Job",
 							"host": [
-								"localhost"
+								"{{BaseUrl}}"
 							],
-							"port": "8081",
 							"path": [
-								"api",
 								"Job"
 							]
 						}
@@ -606,14 +565,11 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/User",
-					"protocol": "http",
+					"raw": "{{BaseUrl}}/User",
 					"host": [
-						"localhost"
+						"{{BaseUrl}}"
 					],
-					"port": "8081",
 					"path": [
-						"api",
 						"User"
 					]
 				}
@@ -648,14 +604,11 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/User/login",
-					"protocol": "http",
+					"raw": "{{BaseUrl}}/User/login",
 					"host": [
-						"localhost"
+						"{{BaseUrl}}"
 					],
-					"port": "8081",
 					"path": [
-						"api",
 						"User",
 						"login"
 					]
@@ -688,14 +641,11 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/User/Logout",
-					"protocol": "http",
+					"raw": "{{BaseUrl}}/User/Logout",
 					"host": [
-						"localhost"
+						"{{BaseUrl}}"
 					],
-					"port": "8081",
 					"path": [
-						"api",
 						"User",
 						"Logout"
 					]
@@ -731,14 +681,11 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/api/Company/12313112-123-12",
-					"protocol": "http",
+					"raw": "{{BaseUrl}}/Company/12313112-123-12",
 					"host": [
-						"localhost"
+						"{{BaseUrl}}"
 					],
-					"port": "8081",
 					"path": [
-						"api",
 						"Company",
 						"12313112-123-12"
 					]
@@ -762,14 +709,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8081/api/Company",
-					"protocol": "http",
+					"raw": "{{BaseUrl}}/Company",
 					"host": [
-						"localhost"
+						"{{BaseUrl}}"
 					],
-					"port": "8081",
 					"path": [
-						"api",
 						"Company"
 					]
 				}
@@ -802,7 +746,12 @@
 	"variable": [
 		{
 			"key": "AccessToken",
-			"value": "11",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkM2VjMjBhNC1lNjE4LTQ4MWMtYWJmMC01OWFiNTAwNTAxOTUiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6Ijc2OTg1NjJlLTg4OGUtNDU3OC05OWYwLTAxMzIzZDdlMTI0ZCIsImV4cCI6MTcyODc3NjYwOCwiaXNzIjoieW91cmFwcCIsImF1ZCI6InlvdXJhcHAifQ.Vd8ujAOSNH7tTpq9llBy7qge2QlqzMgz3XctD1BFA7k",
+			"type": "string"
+		},
+		{
+			"key": "BaseUrl",
+			"value": "http://localhost:8081/api",
 			"type": "string"
 		}
 	]
