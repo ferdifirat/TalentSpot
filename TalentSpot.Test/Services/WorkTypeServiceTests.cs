@@ -83,7 +83,7 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.True(result.Success);
-            Assert.Equal(newWorkType, result.Result);
+            Assert.Equal(newWorkType, result.Data);
             _workTypeRepositoryMock.Verify(r => r.AddAsync(newWorkType), Times.Once);
             _cacheMock.Verify(c => c.RemoveAsync(_cacheKey), Times.Once);
         }
@@ -103,7 +103,7 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.False(result.Success);
-            Assert.Equal(ResponseMessages.WorkTypeAlreadyExists, result.Message);
+            Assert.Equal(ResponseMessageConstants.WorkTypeAlreadyExists, result.Message);
         }
 
         [Fact]
@@ -123,7 +123,7 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.True(result.Success);
-            Assert.Equal(updatedWorkType, result.Result);
+            Assert.Equal(updatedWorkType, result.Data);
             _workTypeRepositoryMock.Verify(r => r.UpdateAsync(updatedWorkType), Times.Once);
             _cacheMock.Verify(c => c.RemoveAsync(_cacheKey), Times.Once);
             _cacheMock.Verify(c => c.RemoveAsync($"{_cacheKey}-{updatedWorkType.Id}"), Times.Once);
@@ -144,7 +144,7 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.False(result.Success);
-            Assert.Equal(ResponseMessages.WorkTypeExistsElsewhere, result.Message);
+            Assert.Equal(ResponseMessageConstants.WorkTypeExistsElsewhere, result.Message);
         }
 
         [Fact]

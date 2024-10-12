@@ -84,7 +84,7 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.True(result.Success);
-            Assert.Equal(newBenefit, result.Result);
+            Assert.Equal(newBenefit, result.Data);
             _benefitRepositoryMock.Verify(r => r.AddAsync(newBenefit), Times.Once);
             _cacheMock.Verify(c => c.RemoveAsync(_cacheKey), Times.Once);
         }
@@ -104,7 +104,7 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.False(result.Success);
-            Assert.Equal(ResponseMessages.BenefitAlreadyExists, result.Message);
+            Assert.Equal(ResponseMessageConstants.BenefitAlreadyExists, result.Message);
         }
 
         [Fact]
@@ -124,7 +124,7 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.True(result.Success);
-            Assert.Equal(updatedBenefit, result.Result);
+            Assert.Equal(updatedBenefit, result.Data);
             _benefitRepositoryMock.Verify(r => r.UpdateAsync(updatedBenefit), Times.Once);
             _cacheMock.Verify(c => c.RemoveAsync(_cacheKey), Times.Once);
             _cacheMock.Verify(c => c.RemoveAsync($"{_cacheKey}-{updatedBenefit.Id}"), Times.Once);
@@ -145,7 +145,7 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.False(result.Success);
-            Assert.Equal(ResponseMessages.DuplicateBenefit, result.Message);
+            Assert.Equal(ResponseMessageConstants.DuplicateBenefit, result.Message);
         }
 
         [Fact]

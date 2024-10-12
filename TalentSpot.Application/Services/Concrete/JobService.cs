@@ -38,12 +38,12 @@ namespace TalentSpot.Application.Services.Concrete
             var company = await _companyRepository.GetCompanyByUserId(userId);
             if (company == null)
             {
-                return ResponseMessage<JobDTO>.FailureResponse(ResponseMessages.CompanyNotFound);
+                return ResponseMessage<JobDTO>.FailureResponse(ResponseMessageConstants.CompanyNotFound);
             }
 
             if (company.AllowedJobPostings == 0)
             {
-                return ResponseMessage<JobDTO>.FailureResponse(ResponseMessages.NoAllowedJobPostings);
+                return ResponseMessage<JobDTO>.FailureResponse(ResponseMessageConstants.NoAllowedJobPostings);
             }
 
             if (jobDTO.WorkTypeId.HasValue)
@@ -51,7 +51,7 @@ namespace TalentSpot.Application.Services.Concrete
                 var workType = await _workTypeRepository.GetByIdAsync((Guid)jobDTO.WorkTypeId);
                 if (workType == null)
                 {
-                    return ResponseMessage<JobDTO>.FailureResponse(ResponseMessages.InvalidWorkType);
+                    return ResponseMessage<JobDTO>.FailureResponse(ResponseMessageConstants.InvalidWorkType);
                 }
             }
 
@@ -61,7 +61,7 @@ namespace TalentSpot.Application.Services.Concrete
                 benefits = (await _benefitRepository.List<Benefit>(p => jobDTO.BenefitIds.Contains(p.Id))).ToList();
                 if (benefits == null || !benefits.Any())
                 {
-                    return ResponseMessage<JobDTO>.FailureResponse(ResponseMessages.InvalidBenefits);
+                    return ResponseMessage<JobDTO>.FailureResponse(ResponseMessageConstants.InvalidBenefits);
                 }
             };
 
@@ -119,7 +119,7 @@ namespace TalentSpot.Application.Services.Concrete
             catch (Exception ex)
             {
                 await _unitOfWork.RollbackAsync();
-                return ResponseMessage<JobDTO>.FailureResponse(string.Format(ResponseMessages.JobCreationError, ex.Message));
+                return ResponseMessage<JobDTO>.FailureResponse(string.Format(ResponseMessageConstants.JobCreationError, ex.Message));
             }
         }
 
@@ -128,7 +128,7 @@ namespace TalentSpot.Application.Services.Concrete
             var job = await _jobRepository.GetById<Job>(id, true);
             if (job == null)
             {
-                return ResponseMessage<JobDTO>.FailureResponse(ResponseMessages.JobNotFound);
+                return ResponseMessage<JobDTO>.FailureResponse(ResponseMessageConstants.JobNotFound);
             }
 
             var includes = new List<string> { $"{nameof(JobBenefit.Benefit)}" };
@@ -161,7 +161,7 @@ namespace TalentSpot.Application.Services.Concrete
             var jobs = await _jobRepository.GetAllAsync();
             if (jobs == null || !jobs.Any())
             {
-                return ResponseMessage<List<JobDTO>>.FailureResponse(ResponseMessages.JobNotFound);
+                return ResponseMessage<List<JobDTO>>.FailureResponse(ResponseMessageConstants.JobNotFound);
             }
 
             var jobDTOs = new List<JobDTO>();
@@ -202,7 +202,7 @@ namespace TalentSpot.Application.Services.Concrete
             var existingJob = await _jobRepository.GetByIdAsync(jobUpdateDTO.Id);
             if (existingJob == null)
             {
-                return ResponseMessage<JobDTO>.FailureResponse(ResponseMessages.JobNotFound);
+                return ResponseMessage<JobDTO>.FailureResponse(ResponseMessageConstants.JobNotFound);
             }
 
             if (jobUpdateDTO.WorkTypeId != null)
@@ -210,7 +210,7 @@ namespace TalentSpot.Application.Services.Concrete
                 var workType = await _workTypeRepository.GetByIdAsync((Guid)jobUpdateDTO.WorkTypeId);
                 if (workType == null)
                 {
-                    return ResponseMessage<JobDTO>.FailureResponse(ResponseMessages.InvalidWorkType);
+                    return ResponseMessage<JobDTO>.FailureResponse(ResponseMessageConstants.InvalidWorkType);
                 }
             }
 
@@ -218,7 +218,7 @@ namespace TalentSpot.Application.Services.Concrete
             var benefits = (await _benefitRepository.List<Benefit>(p => jobUpdateDTO.BenefitIds.Contains(p.Id))).ToList();
             if (benefits == null || !benefits.Any())
             {
-                return ResponseMessage<JobDTO>.FailureResponse(ResponseMessages.InvalidBenefits);
+                return ResponseMessage<JobDTO>.FailureResponse(ResponseMessageConstants.InvalidBenefits);
             }
 
             // Job updates

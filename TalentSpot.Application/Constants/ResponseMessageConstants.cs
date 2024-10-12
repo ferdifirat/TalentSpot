@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TalentSpot.Application.Constants
+﻿namespace TalentSpot.Application.Constants
 {
-    public class ResponseMessages
+    public class ResponseMessageConstants
     {
         public const string BenefitAlreadyExists = "Yan hak zaten mevcut.";
         public const string BenefitNotFound = "Yan hak bulunamadı.";
@@ -29,8 +23,5 @@ namespace TalentSpot.Application.Constants
         public const string RegistrationFailed = "User registration failed.";
         public const string WorkTypeAlreadyExists = "Çalışma türü zaten mevcut.";
         public const string WorkTypeExistsElsewhere = "Aynı çalışma türü zaten başka bir kayıt olarak mevcut.";
-
-
-
     }
 }

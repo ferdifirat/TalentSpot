@@ -100,7 +100,7 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.True(result.Success);
-            Assert.Equal(forbiddenWord, result.Result);
+            Assert.Equal(forbiddenWord, result.Data);
             _cacheMock.Verify(c => c.RemoveAsync(_cacheKey), Times.Once);
         }
 
@@ -120,7 +120,7 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.True(result.Success);
-            Assert.Equal(forbiddenWord, result.Result);
+            Assert.Equal(forbiddenWord, result.Data);
             _cacheMock.Verify(c => c.RemoveAsync(_cacheKey), Times.Once);
             _cacheMock.Verify(c => c.RemoveAsync($"{_cacheKey}-{forbiddenWord.Id}"), Times.Once);
         }

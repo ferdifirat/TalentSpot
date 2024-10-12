@@ -61,7 +61,7 @@ namespace TalentSpot.Application.Services.Concrete
 
             if (existingWorkType.Any())
             {
-                return ResponseMessage<WorkType>.FailureResponse(ResponseMessages.WorkTypeAlreadyExists);
+                return ResponseMessage<WorkType>.FailureResponse(ResponseMessageConstants.WorkTypeAlreadyExists);
             }
 
             await _workTypeRepository.AddAsync(workType);
@@ -76,7 +76,7 @@ namespace TalentSpot.Application.Services.Concrete
 
             if (existingWorkType.Any())
             {
-                return ResponseMessage<WorkType>.FailureResponse(ResponseMessages.WorkTypeExistsElsewhere);
+                return ResponseMessage<WorkType>.FailureResponse(ResponseMessageConstants.WorkTypeExistsElsewhere);
             }
 
             await _workTypeRepository.UpdateAsync(workType);

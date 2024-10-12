@@ -2,15 +2,15 @@
 {
     public class ResponseMessage<T>
     {
-        public T Result { get; set; }
+        public T Data { get; set; }
         public bool Success { get; set; }  
         public string Message { get; set; } 
 
-        public static ResponseMessage<T> SuccessResponse(T result, string message = null)
+        public static ResponseMessage<T> SuccessResponse(T data, string message = null)
         {
             return new ResponseMessage<T>
             {
-                Result = result,
+                Data = data,
                 Success = true,
                 Message = message
             };

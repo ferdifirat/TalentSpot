@@ -62,7 +62,7 @@ namespace TalentSpot.Application.Services.Concrete
 
             if (existingWord.Any())
             {
-                return ResponseMessage<ForbiddenWord>.FailureResponse(ResponseMessages.ForbiddenWordAlreadyExists);
+                return ResponseMessage<ForbiddenWord>.FailureResponse(ResponseMessageConstants.ForbiddenWordAlreadyExists);
             }
 
             await _forbiddenWordRepository.AddAsync(forbiddenWord);
@@ -77,7 +77,7 @@ namespace TalentSpot.Application.Services.Concrete
 
             if (existingWord.Any())
             {
-                return ResponseMessage<ForbiddenWord>.FailureResponse(ResponseMessages.AnotherForbiddenWordExists);
+                return ResponseMessage<ForbiddenWord>.FailureResponse(ResponseMessageConstants.AnotherForbiddenWordExists);
             }
 
             await _forbiddenWordRepository.UpdateAsync(forbiddenWord);

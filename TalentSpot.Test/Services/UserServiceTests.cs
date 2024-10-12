@@ -59,8 +59,8 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.True(result.Success);
-            Assert.NotNull(result.Result);
-            Assert.Equal(userDto.PhoneNumber, result.Result.PhoneNumber);
+            Assert.NotNull(result.Data);
+            Assert.Equal(userDto.PhoneNumber, result.Data.PhoneNumber);
             _userRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<User>()), Times.Once);
             _companyRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<Company>()), Times.Once);
         }
@@ -80,8 +80,8 @@ namespace TalentSpot.Test.Services
             // Assert
             response.Should().NotBeNull();
             response.Success.Should().BeFalse();
-            response.Message.Should().Be(ResponseMessages.UserAlreadyExists);
-            response.Result.Should().BeNull();
+            response.Message.Should().Be(ResponseMessageConstants.UserAlreadyExists);
+            response.Data.Should().BeNull();
         }
 
         [Fact]
@@ -98,8 +98,8 @@ namespace TalentSpot.Test.Services
             // Assert
             response.Should().NotBeNull();
             response.Success.Should().BeFalse();
-            response.Message.Should().Be(ResponseMessages.RegistrationFailed); // Since the catch block has an empty response
-            response.Result.Should().BeNull();
+            response.Message.Should().Be(ResponseMessageConstants.RegistrationFailed); // Since the catch block has an empty response
+            response.Data.Should().BeNull();
         }
 
         [Fact]
@@ -120,8 +120,8 @@ namespace TalentSpot.Test.Services
             // Assert
             response.Should().NotBeNull();
             response.Success.Should().BeFalse();
-            response.Message.Should().Be(ResponseMessages.RegistrationFailed); // Since the catch block has an empty response
-            response.Result.Should().BeNull();
+            response.Message.Should().Be(ResponseMessageConstants.RegistrationFailed); // Since the catch block has an empty response
+            response.Data.Should().BeNull();
         }
 
         [Fact]

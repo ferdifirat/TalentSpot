@@ -71,8 +71,8 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.True(result.Success);
-            Assert.NotNull(result.Result);
-            Assert.Equal(jobCreateDTO.Position, result.Result.Position);
+            Assert.NotNull(result.Data);
+            Assert.Equal(jobCreateDTO.Position, result.Data.Position);
             _companyRepositoryMock.Verify(c => c.UpdateAsync(It.IsAny<Company>()), Times.Once);
         }
 
@@ -91,8 +91,8 @@ namespace TalentSpot.Test.Services
             // Assert
             response.Should().NotBeNull();
             response.Success.Should().BeFalse();
-            response.Message.Should().Be(ResponseMessages.CompanyNotFound);
-            response.Result.Should().BeNull();
+            response.Message.Should().Be(ResponseMessageConstants.CompanyNotFound);
+            response.Data.Should().BeNull();
         }
 
         [Fact]
@@ -111,8 +111,8 @@ namespace TalentSpot.Test.Services
             // Assert
             response.Should().NotBeNull();
             response.Success.Should().BeFalse();
-            response.Message.Should().Be(ResponseMessages.NoAllowedJobPostings);
-            response.Result.Should().BeNull();
+            response.Message.Should().Be(ResponseMessageConstants.NoAllowedJobPostings);
+            response.Data.Should().BeNull();
         }
 
         [Fact]
@@ -133,7 +133,7 @@ namespace TalentSpot.Test.Services
             response.Should().NotBeNull();
             response.Success.Should().BeFalse();
             response.Message.Should().Be("Geçersiz çalýþma türü.");
-            response.Result.Should().BeNull();
+            response.Data.Should().BeNull();
         }
 
         [Fact]
@@ -154,8 +154,8 @@ namespace TalentSpot.Test.Services
             // Assert
             response.Should().NotBeNull();
             response.Success.Should().BeFalse();
-            response.Message.Should().Be(ResponseMessages.InvalidBenefits);
-            response.Result.Should().BeNull();
+            response.Message.Should().Be(ResponseMessageConstants.InvalidBenefits);
+            response.Data.Should().BeNull();
         }
 
         [Fact]
@@ -181,7 +181,7 @@ namespace TalentSpot.Test.Services
             response.Should().NotBeNull();
             response.Success.Should().BeFalse();
             response.Message.Should().Contain("Bir hata oluþtu:");
-            response.Result.Should().BeNull();
+            response.Data.Should().BeNull();
         }
 
         [Fact]
@@ -211,9 +211,9 @@ namespace TalentSpot.Test.Services
             // Assert
             response.Should().NotBeNull();
             response.Success.Should().BeTrue();
-            response.Result.Should().NotBeNull();
-            response.Result.Position.Should().Be(jobDTO.Position);
-            response.Result.Salary.Should().Be(jobDTO.Salary);
+            response.Data.Should().NotBeNull();
+            response.Data.Position.Should().Be(jobDTO.Position);
+            response.Data.Salary.Should().Be(jobDTO.Salary);
         }
 
 
@@ -239,8 +239,8 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.True(result.Success);
-            Assert.NotNull(result.Result);
-            Assert.Equal(jobId, result.Result.Id);
+            Assert.NotNull(result.Data);
+            Assert.Equal(jobId, result.Data.Id);
         }
 
         [Fact]
@@ -318,10 +318,10 @@ namespace TalentSpot.Test.Services
             var response = await _jobService.SearchJobsByExpirationDateRangeAsync(startDate, endDate);
 
             // Assert
-            response.Result.Should().NotBeNull();
+            response.Data.Should().NotBeNull();
             response.Success.Should().BeTrue();
-            response.Result.Should().HaveCount(1);
-            response.Result.First().Position.Should().Be("Software Engineer");
+            response.Data.Should().HaveCount(1);
+            response.Data.First().Position.Should().Be("Software Engineer");
         }
 
         [Fact]
@@ -340,7 +340,7 @@ namespace TalentSpot.Test.Services
             // Assert
             response.Should().NotBeNull();
             response.Success.Should().BeFalse();
-            response.Message.Should().Be(ResponseMessages.NoActiveJobs);
+            response.Message.Should().Be(ResponseMessageConstants.NoActiveJobs);
         }
 
         [Fact]
@@ -389,9 +389,9 @@ namespace TalentSpot.Test.Services
             var response = await _jobService.SearchJobsByExpirationDateRangeAsync(startDate, endDate);
 
             // Assert
-            response.Result.Should().NotBeNull();
+            response.Data.Should().NotBeNull();
             response.Success.Should().BeTrue();
-            response.Result.First().Benefits.Should().BeEmpty(); // Expecting empty benefits
+            response.Data.First().Benefits.Should().BeEmpty(); // Expecting empty benefits
         }
 
         [Fact]
@@ -438,10 +438,10 @@ namespace TalentSpot.Test.Services
             // Assert
             response.Should().NotBeNull();
             response.Success.Should().BeTrue();
-            response.Result.Should().NotBeNullOrEmpty();
-            response.Result.Count.Should().Be(1);
+            response.Data.Should().NotBeNullOrEmpty();
+            response.Data.Count.Should().Be(1);
 
-            var jobDTO = response.Result.First();
+            var jobDTO = response.Data.First();
             jobDTO.Position.Should().Be(jobs[0].Position);
             jobDTO.Description.Should().Be(jobs[0].Description);
             jobDTO.ExpirationDate.Should().Be(jobs[0].ExpirationDate);

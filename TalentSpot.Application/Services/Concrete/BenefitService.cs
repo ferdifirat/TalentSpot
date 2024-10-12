@@ -61,7 +61,7 @@ namespace TalentSpot.Application.Services.Concrete
 
             if (existingBenefit.Any())
             {
-                return ResponseMessage<Benefit>.FailureResponse(ResponseMessages.BenefitAlreadyExists);
+                return ResponseMessage<Benefit>.FailureResponse(ResponseMessageConstants.BenefitAlreadyExists);
             }
 
             await _benefitRepository.AddAsync(benefit);
@@ -76,7 +76,7 @@ namespace TalentSpot.Application.Services.Concrete
 
             if (existingBenefit.Any())
             {
-                return ResponseMessage<Benefit>.FailureResponse(ResponseMessages.DuplicateBenefit);
+                return ResponseMessage<Benefit>.FailureResponse(ResponseMessageConstants.DuplicateBenefit);
             }
 
             await _benefitRepository.UpdateAsync(benefit);

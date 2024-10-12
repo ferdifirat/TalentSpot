@@ -23,7 +23,7 @@ namespace TalentSpot.Application.Services.Concrete
 
             if (companies == null || !companies.Any())
             {
-                return ResponseMessage<List<CompanyDTO>>.FailureResponse(ResponseMessages.NoCompaniesFound);
+                return ResponseMessage<List<CompanyDTO>>.FailureResponse(ResponseMessageConstants.NoCompaniesFound);
             }
 
             var companyDTOs = new List<CompanyDTO>();
@@ -52,7 +52,7 @@ namespace TalentSpot.Application.Services.Concrete
             var company = await _companyRepository.GetById<Company>(id, true);
             if (company == null)
             {
-                return ResponseMessage<CompanyDTO>.FailureResponse(ResponseMessages.CompanyNotFound);
+                return ResponseMessage<CompanyDTO>.FailureResponse(ResponseMessageConstants.CompanyNotFound);
             }
 
             return ResponseMessage<CompanyDTO>.SuccessResponse(new CompanyDTO
@@ -75,7 +75,7 @@ namespace TalentSpot.Application.Services.Concrete
             var existingCompany = await _companyRepository.GetById<Company>(companyDTO.Id, true);
             if (existingCompany == null)
             {
-                return ResponseMessage<CompanyDTO>.FailureResponse(ResponseMessages.CompanyNotFound);
+                return ResponseMessage<CompanyDTO>.FailureResponse(ResponseMessageConstants.CompanyNotFound);
             }
 
             existingCompany.Name = companyDTO.Name;
@@ -87,7 +87,7 @@ namespace TalentSpot.Application.Services.Concrete
 
             if (!isUpdated)
             {
-                return ResponseMessage<CompanyDTO>.FailureResponse(ResponseMessages.CompanyUpdateFailed);
+                return ResponseMessage<CompanyDTO>.FailureResponse(ResponseMessageConstants.CompanyUpdateFailed);
             }
 
             return ResponseMessage<CompanyDTO>.SuccessResponse(new CompanyDTO

@@ -38,7 +38,7 @@ namespace TalentSpot.Application.Services.Concrete
             var existingUser = await _userRepository.GetByPhoneNumberAsync(userDto.PhoneNumber);
             if (existingUser != null)
             {
-                return ResponseMessage<UserDTO>.FailureResponse(ResponseMessages.UserAlreadyExists);
+                return ResponseMessage<UserDTO>.FailureResponse(ResponseMessageConstants.UserAlreadyExists);
             }
 
             var hashedPassword = PasswordHasher.HashPassword(userDto.Password);
@@ -83,7 +83,7 @@ namespace TalentSpot.Application.Services.Concrete
             catch (Exception)
             {
                 await _unitOfWork.RollbackAsync();
-                return ResponseMessage<UserDTO>.FailureResponse(ResponseMessages.RegistrationFailed);
+                return ResponseMessage<UserDTO>.FailureResponse(ResponseMessageConstants.RegistrationFailed);
             }
         }
 
@@ -92,7 +92,7 @@ namespace TalentSpot.Application.Services.Concrete
             var user = await _userRepository.GetByPhoneNumberAsync(phoneNumber);
             if (user == null || !PasswordHasher.VerifyPassword(password, user.PasswordHash))
             {
-                throw new UnauthorizedAccessException(ResponseMessages.InvalidCredentials);
+                throw new UnauthorizedAccessException(ResponseMessageConstants.InvalidCredentials);
             }
 
             var token = GenerateJwtToken(user);

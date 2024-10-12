@@ -15,17 +15,23 @@ using TalentSpot.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Database Configuration
+#region Database Configuration
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+#endregion
 
 // Redis Configuration
+#region Redis Configuration
 var redisConfiguration = builder.Configuration.GetSection("Redis:Configuration").Value;
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = redisConfiguration;
 });
+#endregion
 
 // Elasticsearch Configuration
+#region Elasticsearch Configuration
 var elasticsearchOptions = builder.Configuration.GetSection("Elasticsearch");
 var uri = elasticsearchOptions["Uri"];
 var username = elasticsearchOptions["Username"];
@@ -37,17 +43,18 @@ builder.Services.AddSingleton<ElasticsearchSetup>();
 // Configure the ElasticClient
 builder.Services.AddSingleton<IElasticClient>(provider =>
 {
-    var settings = new ConnectionSettings(new Uri("http://localhost:9200"))
+    var settings = new ConnectionSettings(new Uri(uri))
         .EnableDebugMode() // Optional: for detailed debugging info
-    .ServerCertificateValidationCallback((o, certificate, chain, errors) => true)
-        .DefaultIndex("jobs").BasicAuthentication(username,password);
-
+        .ServerCertificateValidationCallback((o, certificate, chain, errors) => true)
+        .DefaultIndex("jobs")
+        .BasicAuthentication(username, password);
 
     return new ElasticClient(settings);
-
 });
+#endregion
 
 // Dependency Injection
+#region Dependency Injection
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
@@ -61,10 +68,11 @@ builder.Services.AddScoped<IForbiddenWordRepository, ForbiddenWordRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IWorkTypeService, WorkTypeService>();
 builder.Services.AddScoped<IBenefitService, BenefitService>();
-builder.Services.AddScoped<IForbiddenWordService, ForbiddenWordService>();
 builder.Services.AddScoped<ICacheService, CacheService>();
+#endregion
 
-// JWT Authentication Ayarlarý
+// JWT Authentication Configuration
+#region JWT Authentication Configuration
 var jwtSecret = builder.Configuration["Jwt:Secret"];
 builder.Services.AddAuthentication(options =>
 {
@@ -91,31 +99,30 @@ builder.Services.AddScoped<IUserService, UserService>(provider =>
             provider.GetRequiredService<ICompanyRepository>(),
             provider.GetRequiredService<ICacheService>(),
             jwtSecret));
+#endregion
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-// Veritabaný baðlantýsýný kontrol et
+// Check Database Connection
+#region Database Connection Check
 try
 {
     using (var scope = builder.Services.BuildServiceProvider().CreateScope())
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        dbContext.Database.OpenConnection(); // Baðlantýyý açmayý dener
-        dbContext.Database.CloseConnection(); // Baðlantýyý kapat
-        Console.WriteLine("Veritabaný baðlantýsý baþarýlý.");
+        dbContext.Database.OpenConnection(); // Try to open the connection
+        dbContext.Database.CloseConnection(); // Close the connection
+        Console.WriteLine("Database connection successful.");
     }
 }
 catch (Exception ex)
 {
-    Console.WriteLine("Veritabaný baðlantýsý baþarýsýz: " + ex.Message);
+    Console.WriteLine("Database connection failed: " + ex.Message);
 }
+#endregion
 
 var app = builder.Build();
 
@@ -128,15 +135,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//using (var scope = app.Services.CreateScope())
-//{
-//   var elasticsearchSetup = scope.ServiceProvider.GetRequiredService<ElasticsearchSetup>();
-//    await elasticsearchSetup.EnsureIndexCreatedAsync();  // Await the index creation task
-//}
-
 app.UseHttpsRedirection();
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllers();

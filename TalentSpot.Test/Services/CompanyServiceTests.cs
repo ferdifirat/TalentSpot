@@ -38,8 +38,8 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.True(result.Success);
-            Assert.NotNull(result.Result);
-            Assert.Equal(2, result.Result.Count);
+            Assert.NotNull(result.Data);
+            Assert.Equal(2, result.Data.Count);
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.False(result.Success);
-            Assert.Equal(ResponseMessages.JobNotFound, result.Message); // Use constant here
+            Assert.Equal(ResponseMessageConstants.JobNotFound, result.Message); // Use constant here
         }
 
         [Fact]
@@ -70,8 +70,8 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.True(result.Success);
-            Assert.NotNull(result.Result);
-            Assert.Equal(companyId, result.Result.Id);
+            Assert.NotNull(result.Data);
+            Assert.Equal(companyId, result.Data.Id);
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.False(result.Success);
-            Assert.Equal(ResponseMessages.CompanyNotFound, result.Message); // Use constant here
+            Assert.Equal(ResponseMessageConstants.CompanyNotFound, result.Message); // Use constant here
         }
 
         [Fact]
@@ -110,7 +110,7 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.True(result.Success);
-            Assert.Equal("Updated Company", result.Result.Name);
+            Assert.Equal("Updated Company", result.Data.Name);
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.False(result.Success);
-            Assert.Equal(ResponseMessages.CompanyNotFound, result.Message); // Use constant here
+            Assert.Equal(ResponseMessageConstants.CompanyNotFound, result.Message); // Use constant here
         }
 
         [Fact]
@@ -149,7 +149,7 @@ namespace TalentSpot.Test.Services
 
             // Assert
             Assert.False(result.Success);
-            Assert.Equal(ResponseMessages.CompanyUpdateFailed, result.Message); // Use constant here
+            Assert.Equal(ResponseMessageConstants.CompanyUpdateFailed, result.Message); // Use constant here
         }
     }
 }

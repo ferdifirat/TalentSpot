@@ -1,10 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Nest;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Text.Json.Serialization;
-using TalentSpot.Domain.Interfaces;
-using TalentSpot.Infrastructure.Data;
+﻿using Nest;
 
 namespace TalentSpot.Infrastructure.ElasticSearch
 {
@@ -49,6 +43,5 @@ namespace TalentSpot.Infrastructure.ElasticSearch
         public int Salary { get; set; }
         public string CompanyId { get; set; }
     }
-
 }
 
