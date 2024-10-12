@@ -61,7 +61,7 @@ namespace TalentSpot.Application.Services.Concrete
 
             if (existingWorkType.Any())
             {
-                return ResponseMessage<WorkType>.FailureResponse("Çalışma türü zaten mevcut.");
+                return ResponseMessage<WorkType>.FailureResponse(ResponseMessages.WorkTypeAlreadyExists);
             }
 
             await _workTypeRepository.AddAsync(workType);
@@ -76,7 +76,7 @@ namespace TalentSpot.Application.Services.Concrete
 
             if (existingWorkType.Any())
             {
-                return ResponseMessage<WorkType>.FailureResponse("Aynı çalışma türü zaten başka bir kayıt olarak mevcut.");
+                return ResponseMessage<WorkType>.FailureResponse(ResponseMessages.WorkTypeExistsElsewhere);
             }
 
             await _workTypeRepository.UpdateAsync(workType);

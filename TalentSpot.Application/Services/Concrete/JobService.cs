@@ -1,4 +1,5 @@
 ﻿using Elastic.Clients.Elasticsearch.IndexLifecycleManagement;
+using TalentSpot.Application.Constants;
 using TalentSpot.Application.DTOs;
 using TalentSpot.Domain.Entities;
 using TalentSpot.Domain.Interfaces;
@@ -37,12 +38,12 @@ namespace TalentSpot.Application.Services.Concrete
             var company = await _companyRepository.GetCompanyByUserId(userId);
             if (company == null)
             {
-                return ResponseMessage<JobDTO>.FailureResponse("Şirket bulunamadı.");
+                return ResponseMessage<JobDTO>.FailureResponse(ResponseMessages.CompanyNotFound);
             }
 
             if (company.AllowedJobPostings == 0)
             {
-                return ResponseMessage<JobDTO>.FailureResponse("Bu şirketin ilan yayınlama hakkı kalmamıştır.");
+                return ResponseMessage<JobDTO>.FailureResponse(ResponseMessages.NoAllowedJobPostings);
             }
 
             if (jobDTO.WorkTypeId.HasValue)
@@ -50,7 +51,7 @@ namespace TalentSpot.Application.Services.Concrete
                 var workType = await _workTypeRepository.GetByIdAsync((Guid)jobDTO.WorkTypeId);
                 if (workType == null)
                 {
-                    return ResponseMessage<JobDTO>.FailureResponse("Geçersiz çalışma türü.");
+                    return ResponseMessage<JobDTO>.FailureResponse(ResponseMessages.InvalidWorkType);
                 }
             }
 
@@ -60,7 +61,7 @@ namespace TalentSpot.Application.Services.Concrete
                 benefits = (await _benefitRepository.List<Benefit>(p => jobDTO.BenefitIds.Contains(p.Id))).ToList();
                 if (benefits == null || !benefits.Any())
                 {
-                    return ResponseMessage<JobDTO>.FailureResponse("Geçersiz yan haklar.");
+                    return ResponseMessage<JobDTO>.FailureResponse(ResponseMessages.InvalidBenefits);
                 }
             };
 
@@ -72,7 +73,7 @@ namespace TalentSpot.Application.Services.Concrete
                 Description = jobDTO.Description,
                 ExpirationDate = DateTime.UtcNow.AddDays(15),
                 QualityScore = await CalculateQualityScoreAsync(jobDTO.WorkTypeId, jobDTO.Salary, jobDTO.BenefitIds, jobDTO.Description),
-                WorkTypeId = jobDTO.WorkTypeId, // WorkType ilişkilendirildi
+                WorkTypeId = jobDTO.WorkTypeId,
                 Salary = jobDTO.Salary,
                 CompanyId = company.Id,
                 JobBenefits = benefits.Count() > 0 ? benefits.Select(b => new JobBenefit
@@ -101,11 +102,11 @@ namespace TalentSpot.Application.Services.Concrete
                     Description = job.Description,
                     ExpirationDate = job.ExpirationDate,
                     QualityScore = job.QualityScore,
-                    Benefits = benefits != null && benefits.Any() ? benefits.Select(p => new BenefitDTO()
+                    Benefits = benefits.Select(p => new BenefitDTO()
                     {
                         Id = p.Id,
                         Name = p.Name
-                    }).ToList() : new List<BenefitDTO>(),
+                    }).ToList(),
                     WorkType = job.WorkType != null ? new WorkTypeDTO()
                     {
                         Id = job.WorkType.Id,
@@ -118,7 +119,7 @@ namespace TalentSpot.Application.Services.Concrete
             catch (Exception ex)
             {
                 await _unitOfWork.RollbackAsync();
-                return ResponseMessage<JobDTO>.FailureResponse("Bir hata oluştu: " + ex.Message);
+                return ResponseMessage<JobDTO>.FailureResponse(string.Format(ResponseMessages.JobCreationError, ex.Message));
             }
         }
 
@@ -127,7 +128,7 @@ namespace TalentSpot.Application.Services.Concrete
             var job = await _jobRepository.GetById<Job>(id, true);
             if (job == null)
             {
-                return ResponseMessage<JobDTO>.FailureResponse("İlan bulunamadı.");
+                return ResponseMessage<JobDTO>.FailureResponse(ResponseMessages.JobNotFound);
             }
 
             var includes = new List<string> { $"{nameof(JobBenefit.Benefit)}" };
@@ -149,7 +150,6 @@ namespace TalentSpot.Application.Services.Concrete
                 {
                     Name = job.WorkType.Name,
                     Id = job.WorkType?.Id,
-
                 } : new WorkTypeDTO(),
                 Salary = job.Salary,
                 CompanyId = job.CompanyId
@@ -161,7 +161,7 @@ namespace TalentSpot.Application.Services.Concrete
             var jobs = await _jobRepository.GetAllAsync();
             if (jobs == null || !jobs.Any())
             {
-                return ResponseMessage<List<JobDTO>>.FailureResponse("İlan bulunamadı.");
+                return ResponseMessage<List<JobDTO>>.FailureResponse(ResponseMessages.JobNotFound);
             }
 
             var jobDTOs = new List<JobDTO>();
@@ -202,7 +202,7 @@ namespace TalentSpot.Application.Services.Concrete
             var existingJob = await _jobRepository.GetByIdAsync(jobUpdateDTO.Id);
             if (existingJob == null)
             {
-                return ResponseMessage<JobDTO>.FailureResponse("İlan bulunamadı.");
+                return ResponseMessage<JobDTO>.FailureResponse(ResponseMessages.JobNotFound);
             }
 
             if (jobUpdateDTO.WorkTypeId != null)
@@ -210,7 +210,7 @@ namespace TalentSpot.Application.Services.Concrete
                 var workType = await _workTypeRepository.GetByIdAsync((Guid)jobUpdateDTO.WorkTypeId);
                 if (workType == null)
                 {
-                    return ResponseMessage<JobDTO>.FailureResponse("Geçersiz çalışma türü.");
+                    return ResponseMessage<JobDTO>.FailureResponse(ResponseMessages.InvalidWorkType);
                 }
             }
 
@@ -218,7 +218,7 @@ namespace TalentSpot.Application.Services.Concrete
             var benefits = (await _benefitRepository.List<Benefit>(p => jobUpdateDTO.BenefitIds.Contains(p.Id))).ToList();
             if (benefits == null || !benefits.Any())
             {
-                return ResponseMessage<JobDTO>.FailureResponse("Geçersiz yan haklar.");
+                return ResponseMessage<JobDTO>.FailureResponse(ResponseMessages.InvalidBenefits);
             }
 
             // Job updates
@@ -236,7 +236,6 @@ namespace TalentSpot.Application.Services.Concrete
             // JobBenefits updates
             var deletedJobBenefits = (await _jobBenefitRepository.List<JobBenefit>(p => p.JobId == jobUpdateDTO.Id)).ToList();
             await _jobBenefitRepository.DeleteRangeAsync(deletedJobBenefits);
-
 
             await _jobRepository.UpdateAsync(existingJob);
             await _unitOfWork.CompleteAsync();

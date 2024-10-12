@@ -62,7 +62,7 @@ namespace TalentSpot.Application.Services.Concrete
 
             if (existingWord.Any())
             {
-                return ResponseMessage<ForbiddenWord>.FailureResponse("Yasaklı kelime zaten mevcut.");
+                return ResponseMessage<ForbiddenWord>.FailureResponse(ResponseMessages.ForbiddenWordAlreadyExists);
             }
 
             await _forbiddenWordRepository.AddAsync(forbiddenWord);
@@ -77,7 +77,7 @@ namespace TalentSpot.Application.Services.Concrete
 
             if (existingWord.Any())
             {
-                return ResponseMessage<ForbiddenWord>.FailureResponse("Aynı kelime zaten başka bir kayıt olarak mevcut.");
+                return ResponseMessage<ForbiddenWord>.FailureResponse(ResponseMessages.AnotherForbiddenWordExists);
             }
 
             await _forbiddenWordRepository.UpdateAsync(forbiddenWord);

@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.IdentityModel.Tokens;
+using TalentSpot.Application.Constants;
 using TalentSpot.Application.DTOs;
 using TalentSpot.Domain.Entities;
 using TalentSpot.Domain.Interfaces;
@@ -19,9 +20,9 @@ namespace TalentSpot.Application.Services.Concrete
         private readonly ICacheService _cache;
         private readonly string _jwtSecret;
 
-        public UserService(IUserRepository userRepository, 
-            IUnitOfWork unitOfWork, 
-            ICompanyRepository companyRepository, 
+        public UserService(IUserRepository userRepository,
+            IUnitOfWork unitOfWork,
+            ICompanyRepository companyRepository,
             ICacheService cache,
             string jwtSecret)
         {
@@ -37,7 +38,7 @@ namespace TalentSpot.Application.Services.Concrete
             var existingUser = await _userRepository.GetByPhoneNumberAsync(userDto.PhoneNumber);
             if (existingUser != null)
             {
-                return ResponseMessage<UserDTO>.FailureResponse("Bu telefon numarasıyla kayıtlı bir firma bulunmaktadır.");
+                return ResponseMessage<UserDTO>.FailureResponse(ResponseMessages.UserAlreadyExists);
             }
 
             var hashedPassword = PasswordHasher.HashPassword(userDto.Password);
@@ -79,20 +80,19 @@ namespace TalentSpot.Application.Services.Concrete
                     }
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await _unitOfWork.RollbackAsync();
-                return ResponseMessage<UserDTO>.FailureResponse("");
+                return ResponseMessage<UserDTO>.FailureResponse(ResponseMessages.RegistrationFailed);
             }
         }
-
 
         public async Task<string> LoginAsync(string phoneNumber, string password)
         {
             var user = await _userRepository.GetByPhoneNumberAsync(phoneNumber);
             if (user == null || !PasswordHasher.VerifyPassword(password, user.PasswordHash))
             {
-                throw new UnauthorizedAccessException("Invalid phone number or password.");
+                throw new UnauthorizedAccessException(ResponseMessages.InvalidCredentials);
             }
 
             var token = GenerateJwtToken(user);
@@ -115,8 +115,7 @@ namespace TalentSpot.Application.Services.Concrete
 
         public string GenerateJwtToken(User user)
         {
-            // Anahtarınızı 256 bit uzunluğunda bir string ile oluşturun.
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourVeryLongSecretKeyThatIsAtLeast32Characters")); // En az 32 karakter olmalı
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("YourVeryLongSecretKeyThatIsAtLeast32Characters"));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
@@ -135,6 +134,6 @@ namespace TalentSpot.Application.Services.Concrete
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
     }
+
 }

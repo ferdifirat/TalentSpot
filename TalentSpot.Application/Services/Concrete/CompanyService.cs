@@ -1,4 +1,5 @@
-﻿using TalentSpot.Application.DTOs;
+﻿using TalentSpot.Application.Constants;
+using TalentSpot.Application.DTOs;
 using TalentSpot.Domain.Entities;
 using TalentSpot.Domain.Interfaces;
 
@@ -17,13 +18,12 @@ namespace TalentSpot.Application.Services.Concrete
 
         public async Task<ResponseMessage<List<CompanyDTO>>> GetAllCompanyAsync()
         {
-
-            var includes = new List<string> { $"{nameof(Company.User)}", };
+            var includes = new List<string> { $"{nameof(Company.User)}" };
             var companies = (await _companyRepository.List<Company>(true, includes)).ToList();
 
             if (companies == null || !companies.Any())
             {
-                return ResponseMessage<List<CompanyDTO>>.FailureResponse("İlan bulunamadı.");
+                return ResponseMessage<List<CompanyDTO>>.FailureResponse(ResponseMessages.NoCompaniesFound);
             }
 
             var companyDTOs = new List<CompanyDTO>();
@@ -36,7 +36,7 @@ namespace TalentSpot.Application.Services.Concrete
                     Name = company.Name,
                     Address = company.Address,
                     AllowedJobPostings = company.AllowedJobPostings,
-                    User = new UserDTO()
+                    User = new UserDTO
                     {
                         Id = company.User.Id,
                         PhoneNumber = company.User.PhoneNumber
@@ -52,7 +52,7 @@ namespace TalentSpot.Application.Services.Concrete
             var company = await _companyRepository.GetById<Company>(id, true);
             if (company == null)
             {
-                return ResponseMessage<CompanyDTO>.FailureResponse("Şirket bulunamadı.");
+                return ResponseMessage<CompanyDTO>.FailureResponse(ResponseMessages.CompanyNotFound);
             }
 
             return ResponseMessage<CompanyDTO>.SuccessResponse(new CompanyDTO
@@ -61,13 +61,12 @@ namespace TalentSpot.Application.Services.Concrete
                 Name = company.Name,
                 Address = company.Address,
                 AllowedJobPostings = company.AllowedJobPostings,
-                User = new UserDTO()
+                User = new UserDTO
                 {
                     PhoneNumber = company.User.PhoneNumber,
                     Id = company.User.Id,
                     Email = company.User.Email,
                 }
-
             });
         }
 
@@ -76,7 +75,7 @@ namespace TalentSpot.Application.Services.Concrete
             var existingCompany = await _companyRepository.GetById<Company>(companyDTO.Id, true);
             if (existingCompany == null)
             {
-                return ResponseMessage<CompanyDTO>.FailureResponse("Şirket bulunamadı.");
+                return ResponseMessage<CompanyDTO>.FailureResponse(ResponseMessages.CompanyNotFound);
             }
 
             existingCompany.Name = companyDTO.Name;
@@ -88,10 +87,10 @@ namespace TalentSpot.Application.Services.Concrete
 
             if (!isUpdated)
             {
-                return ResponseMessage<CompanyDTO>.FailureResponse("Şirket bilgileri güncellenemedi.");
+                return ResponseMessage<CompanyDTO>.FailureResponse(ResponseMessages.CompanyUpdateFailed);
             }
 
-            return ResponseMessage<CompanyDTO>.SuccessResponse(new CompanyDTO()
+            return ResponseMessage<CompanyDTO>.SuccessResponse(new CompanyDTO
             {
                 Id = existingCompany.Id,
                 Name = existingCompany.Name,

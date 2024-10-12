@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TalentSpot.Domain", "Talent
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{8D0C8AFE-66F4-43BD-AE12-7D7F0E9E2E39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TalentSpot.Test", "..\TalentSpot.Test\TalentSpot.Test.csproj", "{46C91942-A086-4DEA-8872-A69B1C694FFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TalentSpot.Test", "TalentSpot.Test\TalentSpot.Test.csproj", "{D8EA87D7-A57E-4757-A01C-B13FD06209D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{8D0C8AFE-66F4-43BD-AE12-7D7F0E9E2E39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D0C8AFE-66F4-43BD-AE12-7D7F0E9E2E39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D0C8AFE-66F4-43BD-AE12-7D7F0E9E2E39}.Release|Any CPU.Build.0 = Release|Any CPU
-		{46C91942-A086-4DEA-8872-A69B1C694FFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{46C91942-A086-4DEA-8872-A69B1C694FFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{46C91942-A086-4DEA-8872-A69B1C694FFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{46C91942-A086-4DEA-8872-A69B1C694FFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8EA87D7-A57E-4757-A01C-B13FD06209D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8EA87D7-A57E-4757-A01C-B13FD06209D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8EA87D7-A57E-4757-A01C-B13FD06209D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8EA87D7-A57E-4757-A01C-B13FD06209D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
