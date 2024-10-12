@@ -363,6 +363,9 @@ FodyWeavers.xsd
 # (Ensure these files are in the root directory of your project)
 !docker-compose.yml
 !docker-compose.override.yml
+!docker-compose.dcproj
+!docker-compose
+!launchSettings.json
 
 # Test project files (adjust according to your file structure)
 # Include specific test project directories or files as needed
