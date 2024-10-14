@@ -12,8 +12,8 @@ using TalentSpot.Infrastructure.Data;
 namespace TalentSpot.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241011132429_UpdateNewModels")]
-    partial class UpdateNewModels
+    [Migration("20241014205709_InitialDb")]
+    partial class InitialDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,6 +44,36 @@ namespace TalentSpot.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Benefits");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("5ad96154-7bd7-427e-b9e9-831020cc7ecf"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(646),
+                            Name = "Health Insurance",
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(646)
+                        },
+                        new
+                        {
+                            Id = new Guid("11aaba7a-81df-4e90-a3e5-910afdfc4397"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(650),
+                            Name = "Paid Vacation",
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(651)
+                        },
+                        new
+                        {
+                            Id = new Guid("a3f995ca-4b13-4645-8fe6-699287567eba"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(654),
+                            Name = "Remote Work",
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(654)
+                        },
+                        new
+                        {
+                            Id = new Guid("b67f6992-c0af-41fe-a64a-80b36559b8cb"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(657),
+                            Name = "Flexible Hours",
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(658)
+                        });
                 });
 
             modelBuilder.Entity("TalentSpot.Domain.Entities.Company", b =>
@@ -99,6 +129,36 @@ namespace TalentSpot.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ForbiddenWords");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("b97d6818-3796-45f3-9094-993cba920846"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(794),
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(795),
+                            Word = "Prohibited"
+                        },
+                        new
+                        {
+                            Id = new Guid("ef395537-2173-4f8a-bb49-119f82a3e95c"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(807),
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(807),
+                            Word = "Illegal"
+                        },
+                        new
+                        {
+                            Id = new Guid("26fa4ba6-446a-4b37-b89d-a7a470124f3c"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(810),
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(811),
+                            Word = "Banned"
+                        },
+                        new
+                        {
+                            Id = new Guid("f65981a9-8b1d-4b8c-b1ad-0eb13b4a58b4"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(813),
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(814),
+                            Word = "Restricted"
+                        });
                 });
 
             modelBuilder.Entity("TalentSpot.Domain.Entities.Job", b =>
@@ -220,6 +280,36 @@ namespace TalentSpot.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WorkTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("1529d4ac-8281-46bd-8fd3-c55858729883"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(338),
+                            Name = "Full-Time",
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(339)
+                        },
+                        new
+                        {
+                            Id = new Guid("a2a5552f-b753-44ba-9fa5-7936fa461737"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(407),
+                            Name = "Part-Time",
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(408)
+                        },
+                        new
+                        {
+                            Id = new Guid("61b99ba1-9c03-498d-98d6-1ff6115e347b"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(412),
+                            Name = "Freelance",
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(413)
+                        },
+                        new
+                        {
+                            Id = new Guid("be9346ac-7f14-424d-9bc7-fa3656e19fa8"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(416),
+                            Name = "Internship",
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(417)
+                        });
                 });
 
             modelBuilder.Entity("TalentSpot.Domain.Entities.Company", b =>

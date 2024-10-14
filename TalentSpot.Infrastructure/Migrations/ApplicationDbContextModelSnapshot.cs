@@ -45,31 +45,31 @@ namespace TalentSpot.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("8f7ee1c3-c085-4816-8be8-2c4bb2ccb023"),
-                            CreatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1189),
+                            Id = new Guid("5ad96154-7bd7-427e-b9e9-831020cc7ecf"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(646),
                             Name = "Health Insurance",
-                            UpdatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1189)
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(646)
                         },
                         new
                         {
-                            Id = new Guid("356ad535-3c3c-4deb-8fd9-bfa2c7ce1a1f"),
-                            CreatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1191),
+                            Id = new Guid("11aaba7a-81df-4e90-a3e5-910afdfc4397"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(650),
                             Name = "Paid Vacation",
-                            UpdatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1191)
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(651)
                         },
                         new
                         {
-                            Id = new Guid("d934d410-c4e0-4a4e-8dcf-dccbef64d539"),
-                            CreatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1192),
+                            Id = new Guid("a3f995ca-4b13-4645-8fe6-699287567eba"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(654),
                             Name = "Remote Work",
-                            UpdatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1192)
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(654)
                         },
                         new
                         {
-                            Id = new Guid("9088898e-32bf-4acc-b482-3083ce52f58d"),
-                            CreatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1193),
+                            Id = new Guid("b67f6992-c0af-41fe-a64a-80b36559b8cb"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(657),
                             Name = "Flexible Hours",
-                            UpdatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1194)
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(658)
                         });
                 });
 
@@ -130,30 +130,30 @@ namespace TalentSpot.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3db62487-eb51-4adf-9768-7aa50afa8f07"),
-                            CreatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1206),
-                            UpdatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1206),
+                            Id = new Guid("b97d6818-3796-45f3-9094-993cba920846"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(794),
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(795),
                             Word = "Prohibited"
                         },
                         new
                         {
-                            Id = new Guid("8236abee-82c4-499a-9abe-205c88425774"),
-                            CreatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1207),
-                            UpdatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1208),
+                            Id = new Guid("ef395537-2173-4f8a-bb49-119f82a3e95c"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(807),
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(807),
                             Word = "Illegal"
                         },
                         new
                         {
-                            Id = new Guid("cb463d3f-235b-4613-93ac-58751d4c04d2"),
-                            CreatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1209),
-                            UpdatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1209),
+                            Id = new Guid("26fa4ba6-446a-4b37-b89d-a7a470124f3c"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(810),
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(811),
                             Word = "Banned"
                         },
                         new
                         {
-                            Id = new Guid("a14ee31a-a2ae-4c49-9882-45943c1eb2d7"),
-                            CreatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1211),
-                            UpdatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1212),
+                            Id = new Guid("f65981a9-8b1d-4b8c-b1ad-0eb13b4a58b4"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(813),
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(814),
                             Word = "Restricted"
                         });
                 });
@@ -281,31 +281,31 @@ namespace TalentSpot.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c8062f72-1951-423e-a619-2f3941be2f66"),
-                            CreatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1085),
+                            Id = new Guid("1529d4ac-8281-46bd-8fd3-c55858729883"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(338),
                             Name = "Full-Time",
-                            UpdatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1085)
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(339)
                         },
                         new
                         {
-                            Id = new Guid("5cd362bc-a6d4-4f87-b267-3f12ca8d1e41"),
-                            CreatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1094),
+                            Id = new Guid("a2a5552f-b753-44ba-9fa5-7936fa461737"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(407),
                             Name = "Part-Time",
-                            UpdatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1094)
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(408)
                         },
                         new
                         {
-                            Id = new Guid("c9c2b820-d805-401e-a7ee-492fc84e3eed"),
-                            CreatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1117),
+                            Id = new Guid("61b99ba1-9c03-498d-98d6-1ff6115e347b"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(412),
                             Name = "Freelance",
-                            UpdatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1117)
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(413)
                         },
                         new
                         {
-                            Id = new Guid("acfa3608-d91a-4aa1-82cc-ba7f5b962b84"),
-                            CreatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1126),
+                            Id = new Guid("be9346ac-7f14-424d-9bc7-fa3656e19fa8"),
+                            CreatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(416),
                             Name = "Internship",
-                            UpdatedDate = new DateTime(2024, 10, 11, 15, 11, 10, 129, DateTimeKind.Utc).AddTicks(1127)
+                            UpdatedDate = new DateTime(2024, 10, 14, 20, 57, 8, 764, DateTimeKind.Utc).AddTicks(417)
                         });
                 });
 

@@ -25,10 +25,11 @@ Before you begin, ensure you have the following installed:
 >   git clone https://github.com/ferdifirat/TalentSpot.git
 >   cd TalentSpot` 
 
-2.  **Database Migrations** To apply database migrations, run the following command:
+2.  **Database Migrations** To apply database migrations, run the following commands:
 
->      dotnet ef database update --project TalentSpot.Infrastructure/TalentSpot.Infrastructure.csproj
->     --startup-project TalentSpot.API/TalentSpot.API.csproj`
+>      dotnet tool install --global dotnet-ef --version 8.*
+
+>      dotnet ef database update --connection >"Host=localhost;Database=talentspotdb;Username=postgres;Password=postgres" --project >TalentSpot.Infrastructure/TalentSpot.Infrastructure.csproj --startup-project >TalentSpot.API/TalentSpot.API.csproj
 
     
 3.  **Configure Docker**  

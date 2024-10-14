@@ -84,24 +84,24 @@ namespace TalentSpot.Infrastructure.Data
 
             // SeedDatas
             modelBuilder.Entity<WorkType>().HasData(
-                new WorkType { Id = Guid.NewGuid(), Name = "Full-Time" },
-                new WorkType { Id = Guid.NewGuid(), Name = "Part-Time" },
-                new WorkType { Id = Guid.NewGuid(), Name = "Freelance" },
-                new WorkType { Id = Guid.NewGuid(), Name = "Internship" }
+                new WorkType { Id = Guid.NewGuid(), Name = "Full-Time", CreatedDate = DateTime.UtcNow, UpdatedDate = DateTime.UtcNow },
+                new WorkType { Id = Guid.NewGuid(), Name = "Part-Time", CreatedDate = DateTime.UtcNow, UpdatedDate = DateTime.UtcNow },
+                new WorkType {Id = Guid.NewGuid(), Name = "Freelance", CreatedDate = DateTime.UtcNow, UpdatedDate = DateTime.UtcNow },
+                new WorkType {Id = Guid.NewGuid(), Name = "Internship", CreatedDate = DateTime.UtcNow, UpdatedDate = DateTime.UtcNow }
             );
 
             modelBuilder.Entity<Benefit>().HasData(
-                new Benefit { Id = Guid.NewGuid(), Name = "Health Insurance" },
-                new Benefit { Id = Guid.NewGuid(), Name = "Paid Vacation" },
-                new Benefit { Id = Guid.NewGuid(), Name = "Remote Work" },
-                new Benefit { Id = Guid.NewGuid(), Name = "Flexible Hours" }
+                new Benefit { Id = Guid.NewGuid(), Name = "Health Insurance", CreatedDate = DateTime.UtcNow, UpdatedDate = DateTime.UtcNow },
+                new Benefit { Id = Guid.NewGuid(), Name = "Paid Vacation", CreatedDate = DateTime.UtcNow, UpdatedDate = DateTime.UtcNow },
+                new Benefit { Id = Guid.NewGuid(), Name = "Remote Work", CreatedDate = DateTime.UtcNow, UpdatedDate = DateTime.UtcNow },
+                new Benefit { Id = Guid.NewGuid(), Name = "Flexible Hours", CreatedDate = DateTime.UtcNow, UpdatedDate = DateTime.UtcNow }
             );
 
             modelBuilder.Entity<ForbiddenWord>().HasData(
-                new ForbiddenWord { Id = Guid.NewGuid(), Word = "Prohibited" },
-                new ForbiddenWord { Id = Guid.NewGuid(), Word = "Illegal" },
-                new ForbiddenWord { Id = Guid.NewGuid(), Word = "Banned" },
-                new ForbiddenWord { Id = Guid.NewGuid(), Word = "Restricted" }
+                new ForbiddenWord { Id = Guid.NewGuid(), Word = "Prohibited", CreatedDate = DateTime.UtcNow, UpdatedDate = DateTime.UtcNow },
+                new ForbiddenWord { Id = Guid.NewGuid(), Word = "Illegal", CreatedDate = DateTime.UtcNow, UpdatedDate = DateTime.UtcNow },
+                new ForbiddenWord { Id = Guid.NewGuid(), Word = "Banned", CreatedDate = DateTime.UtcNow, UpdatedDate = DateTime.UtcNow },
+                new ForbiddenWord { Id = Guid.NewGuid(), Word = "Restricted", CreatedDate = DateTime.UtcNow, UpdatedDate = DateTime.UtcNow }
             );
         }
     }
