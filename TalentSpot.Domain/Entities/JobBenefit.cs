@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace TalentSpot.Domain.Entities
+﻿namespace TalentSpot.Domain.Entities
 {
     public class JobBenefit : BaseEntity
     {

@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Distributed;
-using System.Text.Json;
+﻿using System.Text.Json;
 using TalentSpot.Application.Constants;
 using TalentSpot.Application.DTOs;
 using TalentSpot.Domain.Entities;

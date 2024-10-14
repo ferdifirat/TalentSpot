@@ -50,14 +50,14 @@ namespace TalentSpot.API.Controllers
                 return BadRequest();
             }
             await _workTypeService.UpdateWorkTypeAsync(workType);
-            return NoContent();
+            return Ok();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteWorkType(Guid id)
         {
             await _workTypeService.DeleteWorkTypeAsync(id);
-            return NoContent();
+            return Ok();
         }
     }
 }

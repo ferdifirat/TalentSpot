@@ -1,5 +1,4 @@
-﻿using Elastic.Clients.Elasticsearch.IndexLifecycleManagement;
-using TalentSpot.Application.Constants;
+﻿using TalentSpot.Application.Constants;
 using TalentSpot.Application.DTOs;
 using TalentSpot.Domain.Entities;
 using TalentSpot.Domain.Interfaces;

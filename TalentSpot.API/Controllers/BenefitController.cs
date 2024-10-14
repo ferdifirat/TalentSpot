@@ -50,14 +50,14 @@ namespace TalentSpot.API.Controllers
                 return BadRequest();
             }
             await _benefitService.UpdateBenefitAsync(benefit);
-            return NoContent();
+            return Ok();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBenefit(Guid id)
         {
             await _benefitService.DeleteBenefitAsync(id);
-            return NoContent();
+            return Ok();
         }
     }
 }

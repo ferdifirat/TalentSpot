@@ -50,14 +50,14 @@ namespace TalentSpot.API.Controllers
                 return BadRequest();
             }
             await _forbiddenWordService.UpdateForbiddenWordAsync(forbiddenWord);
-            return NoContent();
+            return Ok();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteForbiddenWord(Guid id)
         {
             await _forbiddenWordService.DeleteForbiddenWordAsync(id);
-            return NoContent();
+            return Ok();
         }
     }
 }

@@ -4,9 +4,9 @@ namespace TalentSpot.Infrastructure.Helper
 {
     public static class PasswordHasher
     {
-        private const int SaltSize = 16; // 128 bit
-        private const int KeySize = 32;  // 256 bit
-        private const int Iterations = 10000; // PBKDF2 iterasyon sayısı
+        private const int SaltSize = 16;
+        private const int KeySize = 32; 
+        private const int Iterations = 10000;
 
         public static string HashPassword(string password)
         {

@@ -95,13 +95,11 @@ namespace TalentSpot.API.Controllers
 
             var jobsResponse = await _jobService.SearchJobsByExpirationDateRangeAsync(parsedStartDate.ToUniversalTime(), parsedEndDate.ToUniversalTime());
 
-            // Eðer baþarýlý deðilse 404 NotFound dönüyoruz.
             if (!jobsResponse.Success)
             {
                 return NotFound(jobsResponse);
             }
 
-            // Baþarýlý ise 200 OK dönüyoruz.
             return Ok(jobsResponse);
         }
     }
