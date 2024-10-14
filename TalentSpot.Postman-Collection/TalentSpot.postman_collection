@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "531c12a5-80bd-4ad1-a4ee-287f32d4fbf4",
+		"_postman_id": "12c6478d-e791-4027-ab99-28b3b85251e2",
 		"name": "TalentSpot.Collection",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "8128895"
+		"_exporter_id": "25149042"
 	},
 	"item": [
 		{
@@ -528,6 +528,179 @@
 							],
 							"path": [
 								"Job"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ForbiddenWords",
+			"item": [
+				{
+					"name": "GetAlForbiddenWords",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrl}}/ForbiddenWord",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"ForbiddenWord"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetForbiddenWord",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"phoneNumber\": \"5383435967\",\r\n  \"password\": \"123456\",\r\n  \"email\": \"ferdi269@gmail.com\",\r\n  \"companyName\": \"test\",\r\n  \"address\": \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/ForbiddenWord/5cd362bc-a6d4-4f87-b267-3f12ca8d1e41",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"ForbiddenWord",
+								"5cd362bc-a6d4-4f87-b267-3f12ca8d1e41"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateForbiddenWord Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/ForbiddenWord",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"ForbiddenWord"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateForbiddenWord",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"test\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BaseUrl}}/api/ForbiddenWord",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"api",
+								"ForbiddenWord"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteForbiddenWord",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{AccessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BaseUrl}}/ForbiddenWord/65ec3070-8f8e-4e1a-9c44-07ad429c58ec",
+							"host": [
+								"{{BaseUrl}}"
+							],
+							"path": [
+								"ForbiddenWord",
+								"65ec3070-8f8e-4e1a-9c44-07ad429c58ec"
 							]
 						}
 					},
