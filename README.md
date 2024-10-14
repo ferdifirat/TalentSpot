@@ -22,9 +22,9 @@ Before you begin, ensure you have the following installed:
 
 1. **Clone the Repository**
 
->   git clone https://github.com/ferdifirat/TalentSpot.git
+>      git clone https://github.com/ferdifirat/TalentSpot.git
 
->   cd TalentSpot` 
+>      cd TalentSpot
 
 2.  **Database Migrations** To apply database migrations, run the following commands:
 
