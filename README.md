@@ -37,7 +37,7 @@ Before you begin, ensure you have the following installed:
     -   Navigate to the project root where your `docker-compose.yml` file is located.
     -   Run the following command to start up the services:
     
-`docker-compose up -d` 
+>   `docker-compose up -d` 
 
     
     
