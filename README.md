@@ -51,7 +51,8 @@ Before you begin, ensure you have the following installed:
 ### Database Connection String
 
 The default connection string for PostgreSQL is configured in `appsettings.json` as follows:
-`"DefaultConnection": "Host=postgres;Database=talentspot1;Username=postgres;Password=postgres"`
+
+    `"DefaultConnection": "Host=postgres;Database=talentspot1;Username=postgres;Password=postgres"`
 
 ## Testing
 
