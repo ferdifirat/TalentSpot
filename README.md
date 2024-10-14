@@ -15,11 +15,8 @@ The TalentSpot project is a job listing application designed for employers to re
 
 ### Prerequisites
 Before you begin, ensure you have the following installed:
-- .NET 8 SDK
-- Docker
-- PostgreSQL
-- Redis
-- Elasticsearch
+- [.NET 8 SDK](https://dotnet.microsoft.com/download)
+- [Docker](https://www.docker.com/)
 
 ### Setup
 
