@@ -51,6 +51,11 @@ Before you begin, ensure you have the following installed:
 -   **Redis**: Cache service, available at `localhost:6379`
 -   **Elasticsearch**: Full-text search engine, available at `localhost:9200`
 
+### Database Connection String
+
+The default connection string for PostgreSQL is configured in `appsettings.json` as follows:
+`"DefaultConnection": "Host=postgres;Database=talentspot1;Username=postgres;Password=postgres"`
+
 ## Testing
 
 Unit tests are handled with xUnit. You can run tests using the following command:
