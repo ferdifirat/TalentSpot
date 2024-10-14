@@ -30,7 +30,7 @@ Before you begin, ensure you have the following installed:
 
 >      dotnet tool install --global dotnet-ef --version 8.*
 
->      dotnet ef database update --connection >"Host=localhost;Database=talentspotdb;Username=postgres;Password=postgres" --project >TalentSpot.Infrastructure/TalentSpot.Infrastructure.csproj --startup-project >TalentSpot.API/TalentSpot.API.csproj
+>      dotnet ef database update --connection "Host=localhost;Database=talentspotdb;Username=postgres;Password=postgres" --project TalentSpot.Infrastructure/TalentSpot.Infrastructure.csproj --startup-project TalentSpot.API/TalentSpot.API.csproj
 
     
 3.  **Configure Docker**  
@@ -55,7 +55,7 @@ Before you begin, ensure you have the following installed:
 
 The default connection string for PostgreSQL is configured in `appsettings.json` as follows:
 
->    `"DefaultConnection": "Host=postgres;Database=talentspot1;Username=postgres;Password=postgres"`
+>    `"DefaultConnection": "Host=postgres;Database=talentspotdb;Username=postgres;Password=postgres"`
 
 ## Testing
 
