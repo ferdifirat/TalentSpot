@@ -22,8 +22,8 @@ Before you begin, ensure you have the following installed:
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/ferdifirat/TalentSpot.git
-   cd TalentSpot` 
+>   git clone https://github.com/ferdifirat/TalentSpot.git
+>   cd TalentSpot` 
 
 2.  **Database Migrations** To apply database migrations, run the following command:
 
@@ -53,13 +53,13 @@ Before you begin, ensure you have the following installed:
 
 The default connection string for PostgreSQL is configured in `appsettings.json` as follows:
 
-    `"DefaultConnection": "Host=postgres;Database=talentspot1;Username=postgres;Password=postgres"`
+>    `"DefaultConnection": "Host=postgres;Database=talentspot1;Username=postgres;Password=postgres"`
 
 ## Testing
 
 Unit tests are handled with xUnit. You can run tests using the following command:
 
-    `dotnet test` 
+>    `dotnet test` 
 
 ## Postman Collections
 
